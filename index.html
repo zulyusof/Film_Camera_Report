@@ -73,18 +73,28 @@ button,input,select,textarea{font:inherit;color:inherit}
 .mf-prod input{height:48px;padding:0 96px;text-align:center;font:700 30px/48px var(--cond);letter-spacing:.005em}
 .mf:focus-within{border-bottom-color:var(--pen);background:var(--hl)}
 .grid{display:grid;grid-template-columns:var(--cols)}
-.sheet{--cols:64px 56px 56px minmax(300px,1.9fr) 92px minmax(0,1.25fr) minmax(0,1fr) 34px}
+.sheet{--gutter:34px;--cols:64px 56px 56px minmax(300px,1.9fr) 92px minmax(0,1.25fr) minmax(0,1fr) var(--gutter)}
 
-.head{border-bottom:2px solid var(--vrule);font:700 16px/1 var(--cond);letter-spacing:.03em;color:var(--ink)}
-.head span{padding:0 8px 7px}
-.head{align-items:end}
+.head,#rows{margin-left:20px;margin-right:20px}
+.empty,.eor{margin-left:20px;margin-right:54px}
+/* the table is boxed through column 7; the delete gutter stays outside it */
+.head span:nth-child(-n+7){border-top:2px solid var(--vrule);border-bottom:2px solid var(--vrule)}
+.head span:first-child,.c:first-child{border-left:2px solid var(--vrule)}
+.head span:nth-child(7),.c:nth-child(7){border-right:2px solid var(--vrule)}
+.empty,.eor{border-left:2px solid var(--vrule);border-right:2px solid var(--vrule)}
+
+.head span{padding:7px 8px}
+.head{align-items:stretch;font:700 16px/1 var(--cond);letter-spacing:.03em;color:var(--ink)}
+.head span{display:flex;align-items:flex-end;justify-content:flex-start}
 .head span:nth-child(-n+6){border-right:1.5px solid var(--vrule)}
-.head span:nth-child(4),.head span:nth-child(5),.head span:nth-child(6),.head span:nth-child(7){text-align:center}
-.head span:nth-child(5){line-height:1.1}
-.head span:nth-child(4){display:flex;justify-content:center}
+.head span:nth-child(4),.head span:nth-child(5),.head span:nth-child(6),.head span:nth-child(7){text-align:center;justify-content:center}
+.head span:nth-child(5){line-height:1.1;align-items:center}
 
+
+/* the ruled lines stop at the table border, leaving the delete gutter clear */
 .row{position:relative;min-height:calc(var(--lh) * 2);
-  background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--lh) - 1px),var(--rule) calc(var(--lh) - 1px),var(--rule) var(--lh))}
+  background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--lh) - 1px),var(--rule) calc(var(--lh) - 1px),var(--rule) var(--lh));
+  background-repeat:no-repeat;background-size:calc(100% - var(--gutter)) 100%}
 .c{position:relative;min-width:0}
 .c:nth-child(-n+6){border-right:1.5px solid var(--vrule)}
 .c-ft input{text-align:center;font-variant-numeric:tabular-nums}
@@ -164,12 +174,15 @@ button,input,select,textarea{font:inherit;color:inherit}
 .row:hover .del,.row:focus-within .del,.del:focus-visible{opacity:1}
 .del:hover{color:var(--warn)}
 
-.empty{margin:0;padding:18px 16px;color:var(--muted);text-align:center;border-bottom:1px solid var(--rule)}
+.empty{margin-top:0;margin-bottom:0;padding:18px 16px;color:var(--muted);text-align:center}
 
 .eor{display:flex;justify-content:flex-end;align-items:baseline;gap:6px;flex-wrap:wrap;padding:10px 16px 8px;border-bottom:2px solid var(--vrule);font:700 17px/1.2 var(--cond)}
 .eor input{width:6ch;padding:0 4px;border:0;border-bottom:1.5px solid var(--vrule);background:transparent;font:700 18px var(--cond);text-align:center;font-variant-numeric:tabular-nums}
 .eor input:focus{outline:none;border-bottom-color:var(--pen);background:var(--hl)}
-.hint{margin:10px 16px 0;font:500 13px/1.4 var(--sans);color:var(--muted)}
+.hint{margin:10px 20px 0;font:500 13px/1.4 var(--sans);color:var(--muted)}
+ul.hint{padding:0;list-style:none}
+ul.hint li{margin-top:4px}
+ul.hint li:first-child{margin-top:0}
 
 /* bottom bar */
 .actionbar{position:sticky;bottom:0;z-index:20;display:flex;gap:8px;margin:14px -12px 0;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--rule)}
@@ -193,7 +206,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   .tools select{max-width:none;flex-basis:100%}
   .tools .btn{flex:1 1 auto;padding:0 10px}
   .save{flex-basis:100%;order:10}
-  .sheet{padding:20px 0 24px;--cols:40px 36px 36px minmax(0,1.5fr) 50px minmax(0,1fr) minmax(0,.85fr) 0px}
+  .sheet{padding:20px 0 24px;--gutter:0px;--cols:40px 36px 36px minmax(0,1.5fr) 50px minmax(0,1fr) minmax(0,.85fr) var(--gutter)}
   .title{font-size:38px;margin-bottom:16px}
   .meta{margin:0 10px 20px;column-gap:14px}
   .mf-prod span{font-size:14px;bottom:8px}
@@ -213,6 +226,8 @@ button,input,select,textarea{font:inherit;color:inherit}
   .c-del{position:absolute;left:76px;top:var(--lh);width:36px;height:var(--lh);border:0}
   .row:not(.active) .c-del{display:none}
   .del{width:32px;opacity:1}
+  .head,#rows{margin-left:8px;margin-right:8px}
+  .empty,.eor{margin-left:8px;margin-right:8px}
   .eor{padding:10px 8px 8px}
   .hint{margin:10px 8px 0}
 }
@@ -223,9 +238,10 @@ button,input,select,textarea{font:inherit;color:inherit}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   html,body{background:#fff}
   .app{max-width:none;padding:0}
+  .head,#rows,.empty,.eor{margin-left:0;margin-right:0}
   .tools,.actionbar,.toast,.modal,.hint,.c-del,.nochip,.head span:last-child,.hbtn svg{display:none !important}
   .c .sf input.blank,.c .sf select.blank{border-bottom:0}
-  .sheet{border:0;box-shadow:none;padding:0;--cols:14mm 14mm 14mm minmax(0,1.9fr) 18mm minmax(0,1.25fr) minmax(0,1fr)}
+  .sheet{border:0;box-shadow:none;padding:0;--gutter:0px;--cols:14mm 14mm 14mm minmax(0,1.9fr) 18mm minmax(0,1.25fr) minmax(0,1fr)}
   .row{break-inside:avoid}
   .title{margin-bottom:14px}
 }
@@ -259,7 +275,7 @@ button,input,select,textarea{font:inherit;color:inherit}
       <label class="mf mf-stock"><span>Film stock</span><input data-m="stock" list="dl-stock" autocomplete="off" spellcheck="false"></label>
       <label class="mf mf-mag"><span>Magazine #</span><input data-m="mag" autocomplete="off" spellcheck="false"></label>
     </div>
-    <h1 class="title"><label for="rollNo">Roll #</label><input id="rollNo" autocomplete="off" spellcheck="false" inputmode="numeric"></h1>
+    <h1 class="title"><label for="rollNo">Roll #</label><input id="rollNo" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-label="Roll number" placeholder="A001"></h1>
 
     <div class="grid head" aria-hidden="true">
       <span>SCENE</span><span>SHOT</span><span>TAKE</span><span><button type="button" class="hbtn" id="setCfg" aria-label="Settings column: choose fields">SETTINGS<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></span><span>FT COUNTER</span><span>DESCRIPTION</span><span>NOTES</span><span></span>
@@ -273,7 +289,13 @@ button,input,select,textarea{font:inherit;color:inherit}
       <span>ft</span>
     </div>
     <p class="hint dur-hint" id="durHint" hidden></p>
-    <p class="hint">Leave Scene and Shot blank while you stay on the same shot. Leave Settings or Description blank to carry them down from the take above. Carried values show faintly, and anything you type shows in full ink. Take durations under Notes are worked out from the FT counter, frame rate and film stock. Tap the Settings heading to choose which settings you log. When a filter comes off, pick None on that take and the filter stops carrying down.</p>
+    <ul class="hint">
+      <li>Leave Scene and Shot blank while you stay on the same shot.</li>
+      <li>Leave Settings or Description blank to carry them down from the take above. Carried values show faintly, and anything you type shows in full ink.</li>
+      <li>Take durations under Notes are worked out from the FT counter, frame rate and film stock.</li>
+      <li>Tap the Settings heading to choose which settings you log.</li>
+      <li>When a filter comes off, pick None on that take and the filter stops carrying down.</li>
+    </ul>
   </main>
 
   <div class="actionbar">
@@ -712,6 +734,21 @@ function $$(s, el){ return Array.prototype.slice.call((el || document).querySele
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function uid(){ return Math.random().toString(36).slice(2, 10); }
 function tr(s){ return String(s == null ? '' : s).trim(); }
+function nextRoll(s){
+  s = tr(s);
+  if (!s) return '001';
+  if (/\d/.test(s)) return incr(s);
+  var m = s.match(/([A-Za-z]+)$/);
+  if (!m) return s;
+  var up = m[1] === m[1].toUpperCase(), letters = m[1].toUpperCase().split(''), i = letters.length - 1;
+  while (i >= 0){
+    if (letters[i] === 'Z'){ letters[i] = 'A'; i--; }
+    else { letters[i] = String.fromCharCode(letters[i].charCodeAt(0) + 1); break; }
+  }
+  if (i < 0) letters.unshift('A');
+  var out = letters.join('');
+  return s.slice(0, m.index) + (up ? out : out.toLowerCase());
+}
 function incr(s){
   s = tr(s);
   var m = s.match(/(\d+)(?!.*\d)/);
@@ -742,8 +779,8 @@ var PICK = {
        vals: ['1.3','1.4','1.6','1.8','2','2.2','2.5','2.8','3.2','3.5','4','4.5','5','5.6','6.3','7.1','8','9','10','11','13','14','16','18','20','22'],
        marks: ['1.4','2','2.8','4','5.6','8','11','16','22'] },
   lens: { name: 'Focal length', def: '35', fmt: function(v){ return v + 'mm'; },
-       vals: ['8','9.5','10','12','14','16','18','21','24','25','27','28','32','35','40','50','65','75','85','100','135','150','180'],
-       marks: ['8','14','18','25','35','50','85','135','180'] }
+       vals: ['8','9.5','10','10.5','12','14','16','18','21','24','25','27','28','29','32','35','40','47','50','55','58','60','65','75','85','90','95','100','125','135','150','180','200','250','280','300'],
+       marks: ['8','18','25','35','50','85','135','200','300'] }
 };
 function fields(){ return FIELDS.filter(function(f){ return state.fields.indexOf(f.k) >= 0; }); }
 function fmtField(f, v){ v = tr(v); return v ? (f.pre + v + f.suf).trim() : ''; }
@@ -948,7 +985,7 @@ function renderSelect(){
     return '<option value="' + r.id + '"' + (r.id === state.current ? ' selected' : '') + '>' + esc(rollLabel(r)) + '</option>';
   }).join('');
 }
-function sizeRoll(){ var i = $('#rollNo'); i.style.width = Math.max(3, i.value.length + 0.6) + 'ch'; }
+function sizeRoll(){ var i = $('#rollNo'); i.style.width = Math.max(3.4, (i.value || i.placeholder).length * 1.08 + 0.6) + 'ch'; }
 function renderHead(){
   var roll = cur();
   $('#rollNo').value = roll.roll || '';
@@ -1042,7 +1079,7 @@ $$('[data-m]').forEach(function(el){
 /* ---------- rolls ---------- */
 $('#rollSel').addEventListener('change', function(e){ state.current = e.target.value; renderAll(); save(); window.scrollTo(0, 0); });
 $('#btnNew').addEventListener('click', function(){
-  var r = blankRoll(incr(cur().roll || '000'), cur());
+  var r = blankRoll(nextRoll(cur().roll), cur());
   state.rolls.push(r); state.current = r.id;
   renderAll(); save(); window.scrollTo(0, 0);
   toast('Started roll #' + r.roll + '. Enter the magazine number.');
@@ -1123,11 +1160,15 @@ function buildPDF(){
       else doc.text(l, xs[i] + cw[i] / 2, y, { align: 'center' });
     });
     y += 2.2;
-    doc.setDrawColor(0, 0, 0); doc.setLineWidth(0.5); doc.line(M, y, M + W, y);
+    doc.setDrawColor(0, 0, 0); doc.setLineWidth(0.5);
+    doc.line(M, headTop, M + W, headTop);
+    doc.line(M, y, M + W, y);
   }
   function columnRules(){
     doc.setDrawColor(40, 44, 48); doc.setLineWidth(0.35);
     for (var i = 1; i <= 6; i++) doc.line(xs[i], headTop, xs[i], y);
+    doc.line(M, headTop, M, y);
+    doc.line(M + W, headTop, M + W, y);
   }
   function wrapTokens(tokens, width){
     var lines = [[]], lineW = 0, sp = doc.getTextWidth(' ');
@@ -1211,12 +1252,15 @@ function buildPDF(){
   columnRules();
 
   if (y + 14 > BOTTOM + 8){ doc.addPage(); header(false); columnRules(); }
+  var eorTop = y;
   y += 7;
   doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(0, 0, 0);
   var ft = tr(roll.eor);
   doc.text('End of roll #' + (roll.roll || '') + '   ' + (ft ? ft : '______') + ' ft', M + W - 2, y, { align: 'right' });
   y += 3;
   doc.setDrawColor(0, 0, 0); doc.setLineWidth(0.5); doc.line(M, y, M + W, y);
+  doc.setDrawColor(40, 44, 48); doc.setLineWidth(0.35);
+  doc.line(M, eorTop, M, y); doc.line(M + W, eorTop, M + W, y);
 
   var pages = doc.getNumberOfPages();
   if (pages > 1){
