@@ -3,251 +3,328 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="dark">
 <title>Film camera report</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed:wght@500;600;700;800&family=Sofia+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&display=swap">
 <style>
+/* Layout: a dark instrument sheet — banded header, rule-less take list,
+   settings as pills under each description. Committed dark by design. */
 :root{
-  --desk:#E4E8EC; --paper:#FDFDFC; --ink:#1F252B; --muted:#66707A; --faint:#A4AEB8;
-  --rule:#BCC7D1; --vrule:#3C444C; --pen:#2356A8; --pen-ink:#FFFFFF; --hl:rgba(35,86,168,.07); --warn:#C0392B;
-  --lh:30px;
-  --cond:"Sofia Sans Condensed","Arial Narrow",system-ui,sans-serif;
-  --sans:"Sofia Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  box-sizing:border-box;
+  --bg:#070909; --sheet:#0A0D0F; --band:#13181B; --fg:#EDE9E1; --dim:#79838B;
+  --line:#1C2328; --edge:#2A3238; --chip:#1A2024; --amber:#F2A33C; --amber-ink:#140C02;
+  --title:#F2A33C; --rollc:#F2A33C;
+  --warn:#FF7B6B;
+  --cond:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --gutter:30px;
+  --cols:46px 42px 42px minmax(200px,2.3fr) 64px 64px minmax(104px,1fr) var(--gutter);
+  color-scheme:dark;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --desk:#0E1114; --paper:#181C21; --ink:#E4E8EC; --muted:#98A2AD; --faint:#5F6A76;
-    --rule:#313A44; --vrule:#8C97A3; --pen:#86AEF0; --pen-ink:#0B1426; --hl:rgba(134,174,240,.09); --warn:#FF7B6B;
-  }
-}
-:root[data-theme="dark"]{
-  --desk:#0E1114; --paper:#181C21; --ink:#E4E8EC; --muted:#98A2AD; --faint:#5F6A76;
-  --rule:#313A44; --vrule:#8C97A3; --pen:#86AEF0; --pen-ink:#0B1426; --hl:rgba(134,174,240,.09); --warn:#FF7B6B;
-}
-html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0;min-height:100%;background:var(--desk);color:var(--ink);font:400 16px/1.4 var(--sans);-webkit-text-size-adjust:100%}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);
+  font:500 15px/1.45 var(--cond);-webkit-text-size-adjust:100%}
 button,input,select,textarea{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 [hidden]{display:none !important}
 
-.app{max-width:1100px;margin:0 auto;padding:12px 12px 0}
+.app{max-width:1140px;margin:0 auto;padding:14px 14px 0}
 
-/* toolbar */
-.tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
-.tools select{flex:1 1 180px;min-width:0;max-width:320px;height:40px;padding:0 10px;border:1px solid var(--rule);border-radius:4px;background:var(--paper);font:600 16px var(--cond)}
+/* ---------- toolbar ---------- */
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:14px}
+.tools select{flex:1 1 190px;min-width:0;max-width:330px;height:38px;padding:0 10px;
+  border:1px solid var(--edge);border-radius:7px;background:var(--band);font:600 15px var(--cond);color:var(--fg)}
 .tools .spacer{flex:1 1 0}
-.save{font:500 13px var(--sans);color:var(--muted)}
+.save{font:500 12.5px var(--cond);letter-spacing:.04em;color:var(--dim)}
 .save.bad{color:var(--warn)}
-.btn{height:40px;padding:0 14px;border:1px solid var(--rule);border-radius:4px;background:var(--paper);font:700 16px var(--cond);letter-spacing:.01em;cursor:pointer;white-space:nowrap}
-.btn:hover{border-color:var(--muted)}
-.btn.primary{background:var(--pen);border-color:var(--pen);color:var(--pen-ink)}
-.btn.quiet{background:transparent;border-color:transparent;color:var(--muted)}
-.btn.danger{background:var(--warn);border-color:var(--warn);color:#fff}
+.btn{height:38px;padding:0 14px;border:1px solid var(--edge);border-radius:7px;background:var(--band);
+  font:600 15px var(--cond);letter-spacing:.02em;color:var(--fg);cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--dim)}
+.btn.primary{background:var(--rollc);border-color:var(--rollc);color:var(--sheet)}
+.btn.quiet{background:transparent;border-color:transparent;color:var(--dim)}
+.btn.quiet:hover{color:var(--fg)}
+.btn.danger{background:var(--warn);border-color:var(--warn);color:#190603}
 
-/* the sheet */
-.sheet{background:var(--paper);border:1px solid var(--rule);border-radius:3px;padding:26px 0 30px;box-shadow:0 1px 0 var(--rule)}
-.title{display:flex;justify-content:center;align-items:baseline;gap:2px;margin:0 16px 22px;font:700 44px/1 var(--cond);letter-spacing:.01em}
-.title label{cursor:text}
-.title input{width:4.2ch;min-width:3ch;padding:0 2px;border:0;border-bottom:2px solid transparent;background:transparent;font:inherit;letter-spacing:inherit;text-align:left}
-.title input:hover{border-bottom-color:var(--rule)}
-.title input:focus{outline:none;border-bottom-color:var(--pen)}
+/* ---------- the sheet ---------- */
+.sheet{background:var(--sheet);border:1px solid var(--edge);border-radius:10px}
+.sheet.digital{--cols:46px 42px 42px minmax(180px,2fr) 104px 64px minmax(96px,1fr) var(--gutter)}
+.c-tc input{font:500 13px/1.35 var(--mono);font-variant-numeric:tabular-nums}
+.c-tc input + input{margin-top:3px;color:var(--dim)}
+.c-tc input + input:focus{color:var(--fg)}
 
-.meta{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px 28px;margin:0 20px 26px}
-.mf{display:flex;align-items:baseline;gap:8px;min-width:0;border-bottom:1.5px solid var(--vrule)}
-.mf span{flex:0 0 auto;font:700 15px/1 var(--cond);color:var(--muted)}
-.mf input{flex:1 1 auto;min-width:0;width:100%;height:34px;padding:0 2px;border:0;background:transparent;font:500 17px/34px var(--sans);color:var(--ink)}
-.mf input:focus{outline:none}
-.mf-prod{grid-area:1/1/2/3;margin-bottom:6px}
-.mf-dir{grid-area:2/1}.mf-date{grid-area:2/2}
-.mf-dop{grid-area:3/1}.mf-camf{grid-area:3/2}
-.mf-ac1{grid-area:4/1}.mf-stock{grid-area:4/2}
-.mf-ac2{grid-area:5/1}.mf-mag{grid-area:5/2}
-.mf-prod{position:relative}
-.mf-prod span{position:absolute;left:0;bottom:10px;font-size:17px}
-.mf-prod input{height:48px;padding:0 96px;text-align:center;font:700 30px/48px var(--cond);letter-spacing:.005em}
-.mf:focus-within{border-bottom-color:var(--pen);background:var(--hl)}
-.grid{display:grid;grid-template-columns:var(--cols)}
-.sheet{--gutter:34px;--cols:64px 56px 56px minmax(300px,1.9fr) 92px minmax(0,1.25fr) minmax(0,1fr) var(--gutter)}
+/* ---------- header: one set of fields, placed by area per width ---------- */
+.hdr{display:grid;grid-template-columns:186px minmax(0,1fr);
+  grid-template-areas:"prod prod" "date crew" "roll acs" "roll gear"}
+.a-prod{grid-area:prod}.a-date{grid-area:date}.a-roll{grid-area:roll}
+.a-crew{grid-area:crew}.a-acs{grid-area:acs}.a-gear{grid-area:gear}
 
-.head,#rows{margin-left:20px;margin-right:20px}
-.empty,.eor{margin-left:20px;margin-right:54px}
-/* the table is boxed through column 7; the delete gutter stays outside it */
-.head span:nth-child(-n+7){border-top:2px solid var(--vrule);border-bottom:2px solid var(--vrule)}
-.head span:first-child,.c:first-child{border-left:2px solid var(--vrule)}
-.head span:nth-child(7),.c:nth-child(7){border-right:2px solid var(--vrule)}
-.empty,.eor{border-left:2px solid var(--vrule);border-right:2px solid var(--vrule)}
+.hband{padding:13px 20px;border-bottom:1px solid var(--line);min-width:0}
+.hband.end{border-bottom-color:var(--edge)}
+.hrow{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 38px;min-width:0}
+.a-prod{padding:20px 20px 16px;text-align:center}
+.a-date,.a-roll{display:flex;flex-direction:column;justify-content:center;
+  border-right:1px solid var(--line)}
+.a-roll{border-bottom-color:var(--edge)}
 
-.head span{padding:7px 8px}
-.head{align-items:stretch;font:700 16px/1 var(--cond);letter-spacing:.03em;color:var(--ink)}
-.head span{display:flex;align-items:flex-end;justify-content:flex-start}
-.head span:nth-child(-n+6){border-right:1.5px solid var(--vrule)}
-.head span:nth-child(4),.head span:nth-child(5),.head span:nth-child(6),.head span:nth-child(7){text-align:center;justify-content:center}
-.head span:nth-child(5){line-height:1.1;align-items:center}
+.fld{min-width:0}
+.fld > span{display:block;font:600 10px/1.4 var(--cond);letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.fld input{display:block;width:100%;min-width:0;margin-top:3px;padding:0;border:0;
+  background:transparent;font:500 14.5px/1.3 var(--mono);color:var(--fg)}
+.fld input::placeholder{color:var(--dim);opacity:.5}
+.selwrap{display:flex;align-items:center;gap:4px;margin-top:3px}
+.selwrap select{min-width:0;margin:0;padding:0;border:0;background:transparent;
+  font:500 14.5px/1.3 var(--mono);color:var(--fg);cursor:pointer;
+  -webkit-appearance:none;appearance:none}
+.selwrap select:focus{outline:none}
+.selwrap select option{background:var(--band);color:var(--fg)}
+.selwrap select:disabled{color:var(--dim);opacity:1;cursor:not-allowed}
+.selwrap .caret{color:var(--dim)}
+.fld:focus-within .selwrap .caret{color:var(--amber)}
+.fld input:focus{outline:none}
+.fld:focus-within > span{color:var(--amber)}
+.dot{position:relative;display:inline-block;vertical-align:middle;width:5px;height:5px;
+  margin:-1px 0 0 6px;padding:0;border:0;border-radius:50%;cursor:pointer}
+.dot::after{content:"";position:absolute;inset:-15px;border-radius:50%}   /* a thumb-sized target */
+.dot:hover{border-color:var(--fg)}
+.dot-prod{background:var(--title)}
+.dot-roll{background:var(--rollc)}
+.fld.prod input{margin-top:5px;font:700 33px/1.1 var(--cond);letter-spacing:.005em;color:var(--title);text-align:center}
+.fld.rollno input{margin-top:4px;font:600 46px/1 var(--mono);letter-spacing:-.04em;color:var(--rollc)}
+/* the native picker still does the picking; the span and icon do the showing */
+.a-date{position:relative}
+.datewrap{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;margin-top:3px}
+.datewrap input{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;
+  opacity:0;cursor:pointer;caret-color:transparent}
+.datewrap input::-webkit-calendar-picker-indicator{position:absolute;inset:0;
+  width:auto;height:auto;margin:0;padding:0;opacity:0;cursor:pointer}
+.dateshow{flex:0 0 auto;min-height:18px;font:500 13px/1.35 var(--mono);color:var(--fg);white-space:nowrap}
+.dateshow:empty::before{content:"Not set";color:var(--dim);opacity:.6}
+.dateicon{flex:0 0 auto;width:13px;height:13px;color:var(--dim)}
+.fld:focus-within .dateicon{color:var(--amber)}
 
+/* phone only: the chevron that folds everything but roll and date away */
+.a-chev{display:none;grid-area:chev;align-items:center;justify-content:center;
+  width:46px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--dim);cursor:pointer}
+.a-chev svg{width:16px;height:16px;transition:transform .18s ease}
+.a-chev[aria-expanded="true"] svg{transform:rotate(180deg)}
 
-/* the ruled lines stop at the table border, leaving the delete gutter clear */
-.row{position:relative;min-height:calc(var(--lh) * 2);
-  background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--lh) - 1px),var(--rule) calc(var(--lh) - 1px),var(--rule) var(--lh));
-  background-repeat:no-repeat;background-size:calc(100% - var(--gutter)) 100%}
-.c{position:relative;min-width:0}
-.c:nth-child(-n+6){border-right:1.5px solid var(--vrule)}
-.c-ft input{text-align:center;font-variant-numeric:tabular-nums}
-.dur{display:block;height:var(--lh);padding:0 8px;font:600 18px/var(--lh) var(--sans);font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dur.bad{font-size:13px;font-weight:500;color:var(--warn)}
-.dur-hint{color:var(--warn)}
-.c:focus-within{background:var(--hl)}
+/* ---------- take list ---------- */
+.head,.row{display:grid;grid-template-columns:var(--cols);gap:4px 13px;padding:0 20px}
+.head{position:sticky;top:env(safe-area-inset-top,0px);z-index:3;background:var(--sheet);
+  padding-top:9px;padding-bottom:8px;border-bottom:1px solid var(--edge);
+  font:600 10.5px/1 var(--cond);letter-spacing:.15em;text-transform:uppercase;color:var(--dim);
+  align-items:start}
+.head .n{text-align:left}
+/* a block-level flex, so the gear button's text starts level with the plain headings
+   rather than sitting on an inline baseline */
+.hbtn{display:flex;align-items:center;gap:6px;padding:0;border:0;background:transparent;
+  font:inherit;line-height:1;letter-spacing:inherit;color:inherit;cursor:pointer;text-align:left}
+.hbtn svg{flex:0 0 auto;width:12px;height:12px;margin:-1px 0;color:var(--dim)}
+.hbtn:hover,.hbtn:hover svg{color:var(--amber)}
+
+.row{position:relative;padding-top:11px;padding-bottom:11px;border-bottom:1px solid var(--line);align-items:baseline}
+.row.good{box-shadow:inset 3px 0 0 var(--amber);
+  background:linear-gradient(90deg,rgba(242,163,60,.07),rgba(242,163,60,0) 34%)}
+.c{min-width:0}
 .lbl{display:none}
-.c input,.c textarea{display:block;width:100%;margin:0;padding:0 8px;border:0;border-radius:0;background:transparent;font:500 18px/var(--lh) var(--sans);color:var(--ink)}
-.c input{height:var(--lh)}
-.c textarea{resize:none;overflow:hidden;height:calc(var(--lh) * 2)}
+.c input,.c textarea{display:block;width:100%;min-width:0;margin:0;padding:0;border:0;border-radius:0;
+  background:transparent;color:var(--fg);font:500 15px/1.35 var(--cond)}
+.c textarea{resize:none;overflow:hidden}
 .c input:focus,.c textarea:focus{outline:none}
-.c input::placeholder,.c textarea::placeholder{color:var(--muted);opacity:.55}
-.c-scn input,.c-sht input,.c-tk input{text-align:center;font-weight:600;font-variant-numeric:tabular-nums}
+.c input::placeholder,.c textarea::placeholder{color:var(--dim);opacity:1}
+.c-slate{display:contents}
+.sl{display:none}   /* the slate separators; labels replace them on a phone */
+.c-scn input,.c-sht input,.c-tk input{font:500 15px/1.3 var(--mono);font-variant-numeric:tabular-nums}
+.c-tk input{font-weight:600;font-size:17px}
+.row.good .c-tk input{color:var(--amber)}
+.c-scn input.inh,.c-sht input.inh{color:var(--dim)}
+.c-ft input,.dur{font:500 14.5px/1.35 var(--mono);font-variant-numeric:tabular-nums}
+.dur{display:block;min-height:20px;font-weight:600;font-size:15.5px;color:var(--fg);white-space:nowrap}
+.dur.bad{font:500 12px/1.35 var(--cond);color:var(--warn);white-space:normal}
+.c-desc textarea{font-size:15px}
+.c-desc textarea.inh::placeholder{color:var(--dim)}
+.c-desc textarea.ph::placeholder{color:var(--dim);opacity:.6}   /* a hint, not a carried value */
+.c-note textarea{font-size:14px;color:var(--dim)}
+.c-note textarea:focus{color:var(--fg)}
 
-/* settings: small fields that wrap along the ruled lines */
-.setf{display:flex;flex-wrap:wrap;column-gap:12px;padding:0 8px}
-.sf{display:inline-flex;align-items:baseline;height:var(--lh);font:500 18px/var(--lh) var(--sans);white-space:nowrap;cursor:text}
-.sf .ax{color:var(--muted);font-weight:500}
-.sf-fps .ax{margin-left:0}
-.sf-shutter .ax{margin-left:-.3ch}
-.c .sf input{display:inline-block;width:2.5ch;height:var(--lh);padding:0;font:inherit;font-variant-numeric:tabular-nums}
-.c .sf input.blank{border-bottom:1.5px dotted var(--rule)}
-.c .sf input.blank:focus{border-bottom-color:var(--pen)}
-.sf-other{flex:1 1 100%}
-.sf-filter{flex:1 1 100%}
-.c .sf-other input{width:100% !important}
-.hbtn{display:inline-flex;align-items:center;gap:5px;padding:0;border:0;background:transparent;font:inherit;color:inherit;cursor:pointer}
-.hbtn svg{width:14px;height:14px;color:var(--muted)}
-.hbtn:hover svg{color:var(--pen)}
-.opts{display:flex;flex-direction:column;gap:2px;margin:4px 0 0}
-.opt{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 4px;border-bottom:1px solid var(--rule);cursor:pointer;font:500 17px var(--sans)}
-.opt input{width:20px;height:20px;accent-color:var(--pen)}
-.opt small{margin-left:auto;color:var(--muted);font-size:14px}
+/* settings pills, pulled left by their own padding so the text lines up
+   with the description above whether a pill is lit or carried */
+.pills{display:flex;flex-wrap:wrap;gap:5px;margin:7px 0 0 -10px}
+.pill{display:inline-flex;align-items:baseline;max-width:100%;padding:2.5px 9px;
+  border:1px solid transparent;border-radius:999px;background:transparent;
+  font:500 12.5px/1.35 var(--mono);color:var(--dim);white-space:nowrap;cursor:text}
+.pill.on{border-color:var(--edge);background:var(--chip);color:var(--fg)}
+.pill:focus-within{border-color:var(--amber)}
+.pill input,.pill select{min-width:0;padding:0;border:0;background:transparent;
+  font:inherit;color:inherit;font-variant-numeric:tabular-nums}
+.pill input:focus,.pill select:focus{outline:none}
+.pill input::placeholder{color:inherit;opacity:1}
+.pill select{-webkit-appearance:none;appearance:none;cursor:pointer}
+.pill select option,.pill select optgroup{background:var(--band);color:var(--fg)}
+.pill .ax{color:inherit;opacity:.72}
+.pill-fps .ax{margin-left:1px}
+.pill-shutter .ax{margin-left:-.3ch}
+.pill-pick,.pill-sel{cursor:pointer}
+.pill-pick input{cursor:pointer;caret-color:transparent}
+.caret{margin-left:3px;font-size:9px;opacity:.65}
+/* filter set to None: only the caret shows, but the pill stays tappable */
+.pill.isnone{position:relative;justify-content:center;min-width:28px;padding-left:6px;padding-right:6px}
+.pill.isnone select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.pill.isnone .caret{margin-left:0;opacity:.8}
 
-/* T-stop picker */
-.sf-br{flex-basis:100%;height:0}
-.c .sf select.none{color:transparent}
-.c .sf select.none option,.c .sf select.none optgroup{color:var(--ink)}
-.sf-group{display:inline-flex;flex-wrap:nowrap;column-gap:5px;max-width:100%}
-.sf-sel{cursor:pointer}
-.c .sf select{display:inline-block;height:var(--lh);padding:0;border:0;border-radius:0;background:transparent;font:inherit;color:var(--ink);cursor:pointer;-webkit-appearance:none;appearance:none}
-.c .sf select:focus{outline:none}
-.c .sf select option{background:var(--paper);color:var(--ink)}
-.c .sf select.inh{color:var(--faint)}
-.c .sf select.blank{color:var(--muted);border-bottom:1.5px dotted var(--rule)}
-.sf-sel .caret{margin-left:2px;font-size:11px;color:var(--muted)}
-.sf-pick{cursor:pointer}
-.c .sf-pick input{cursor:pointer;caret-color:transparent}
-.sf-pick .caret{margin-left:2px;font-size:11px;color:var(--muted)}
-.tpick{position:fixed;z-index:45;width:320px;padding:14px 16px 14px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);box-shadow:0 10px 30px rgba(10,16,24,.18)}
-.tpick.sheet{left:0 !important;right:0;top:auto !important;bottom:0;width:auto;border-radius:12px 12px 0 0;padding:16px 18px calc(16px + env(safe-area-inset-bottom,0px))}
-.tp-read{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px}
-.tp-read b{font:800 34px/1 var(--cond);font-variant-numeric:tabular-nums;color:var(--ink)}
-.tp-read span{font:500 13px var(--sans);color:var(--muted)}
+.c-del{display:flex;justify-content:flex-end}
+.del{width:28px;height:24px;padding:0;border:0;border-radius:5px;background:transparent;
+  color:var(--dim);font:600 14px var(--cond);cursor:pointer;opacity:0}
+.row:hover .del,.row:focus-within .del,.del:focus-visible{opacity:1}
+.del:hover{color:var(--warn);background:var(--chip)}
+
+.empty{margin:0;padding:26px 20px;color:var(--dim);text-align:center;border-bottom:1px solid var(--line)}
+
+.eor{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 18px;
+  padding:15px 20px;background:var(--band);border-radius:0 0 9px 9px;
+  font:600 11px/1.3 var(--cond);letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.eor .val{display:flex;align-items:baseline;gap:7px;letter-spacing:.15em}
+.eor input{width:6.5ch;padding:0;border:0;border-bottom:1px solid var(--edge);background:transparent;
+  font:600 16px/1.2 var(--mono);letter-spacing:-.02em;color:var(--fg);text-align:right;font-variant-numeric:tabular-nums}
+.eor input:focus{outline:none;border-bottom-color:var(--amber)}
+
+.hint{margin:14px 4px 0;padding:0;list-style:none;font:500 13px/1.45 var(--cond);letter-spacing:.01em;color:var(--dim)}
+.hint li{margin-top:4px}
+.hint li:first-child{margin-top:0}
+.dur-hint{margin:14px 4px 0;color:var(--warn)}
+
+/* ---------- bottom bar ---------- */
+.actionbar{position:sticky;bottom:0;z-index:20;display:flex;gap:8px;margin:16px -14px 0;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));
+  background:var(--bg);border-top:1px solid var(--edge)}
+.actionbar .btn{flex:1;height:46px;font-size:16px}
+.actionbar .btn.primary{flex:1.5;font-size:18px}
+
+/* ---------- value picker ---------- */
+.tpick{position:fixed;z-index:45;width:330px;padding:15px 17px;border:1px solid var(--edge);
+  border-radius:12px;background:var(--band);box-shadow:0 18px 44px rgba(0,0,0,.55)}
+.tpick.sheet{left:0 !important;right:0;top:auto !important;bottom:0;width:auto;
+  border-radius:14px 14px 0 0;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.tp-read{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px}
+.tp-read b{font:600 32px/1 var(--mono);letter-spacing:-.03em;color:var(--rollc);font-variant-numeric:tabular-nums}
+.tp-read span{font:500 12.5px var(--cond);letter-spacing:.04em;color:var(--dim)}
 .tp-range{display:block;width:100%;height:34px;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer}
 .tp-range:focus{outline:none}
-.tp-range::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--rule)}
-.tp-range::-moz-range-track{height:4px;border-radius:2px;background:var(--rule)}
-.tp-range::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-11px;border-radius:50%;background:var(--pen);border:3px solid var(--paper);box-shadow:0 0 0 1px var(--pen)}
-.tp-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--pen);border:3px solid var(--paper);box-shadow:0 0 0 1px var(--pen)}
-.tp-range:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px var(--hl),0 0 0 2px var(--pen)}
-.tp-ticks{position:relative;height:30px;margin:0 13px}
-.tp-ticks i{position:absolute;top:0;width:1px;height:5px;background:var(--muted);opacity:.5;transform:translateX(-.5px)}
-.tp-ticks i.full{height:9px;opacity:1}
-.tp-ticks em{position:absolute;top:11px;transform:translateX(-50%);font:600 12px/1 var(--cond);font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums}
-.tp-acts{display:flex;justify-content:space-between;gap:8px;margin-top:6px}
-.tp-acts .btn{height:40px}
+.tp-range::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:var(--edge)}
+.tp-range::-moz-range-track{height:3px;border-radius:2px;background:var(--edge)}
+.tp-range::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-11.5px;
+  border-radius:50%;background:var(--rollc);border:3px solid var(--band)}
+.tp-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--rollc);border:3px solid var(--band)}
+.tp-ticks{position:relative;height:28px;margin:0 13px}
+.tp-ticks i{position:absolute;top:0;width:1px;height:5px;background:var(--dim);opacity:.45;transform:translateX(-.5px)}
+.tp-ticks i.full{height:9px;opacity:.9}
+.tp-ticks em{position:absolute;top:11px;transform:translateX(-50%);font:500 11.5px/1 var(--mono);
+  font-style:normal;color:var(--dim);font-variant-numeric:tabular-nums}
+.tp-acts{display:flex;justify-content:space-between;gap:8px;margin-top:4px}
 
-/* carried down from the take above: shown faintly */
-.sf .ax{color:var(--ink)}
-.sf.inh .ax,.c .sf input.inh::placeholder,.c textarea.inh::placeholder{color:var(--faint);opacity:1}
-.sf.blank .ax{color:var(--muted)}
+/* ---------- toast + modal ---------- */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom,0px));
+  z-index:40;display:flex;align-items:center;gap:12px;max-width:calc(100% - 24px);
+  padding:11px 15px;border:1px solid var(--edge);border-radius:9px;background:var(--band);
+  font:500 14.5px var(--cond);color:var(--fg);box-shadow:0 14px 36px rgba(0,0,0,.5)}
+.toast button{border:0;background:transparent;color:var(--amber);font:600 15px var(--cond);
+  text-decoration:underline;cursor:pointer;padding:4px}
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
+  padding:16px;background:rgba(2,4,6,.72)}
+.dlg{width:100%;max-width:470px;max-height:90%;overflow:auto;padding:19px;
+  border:1px solid var(--edge);border-radius:12px;background:var(--band)}
+.dlg h3{margin:0 0 8px;font:700 21px/1.2 var(--cond)}
+.dlg h4{margin:15px 0 7px;font:600 11px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.dlg p{margin:0 0 12px;color:var(--dim);font-size:14.5px}
+.dlg textarea{width:100%;height:200px;padding:9px;border:1px solid var(--edge);border-radius:7px;
+  background:var(--sheet);font:12.5px/1.4 var(--mono);color:var(--fg)}
+.acts{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}
+.opts{display:flex;flex-direction:column;gap:2px;margin:4px 0 0}
+.opt{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 4px;
+  border-bottom:1px solid var(--line);cursor:pointer;font:500 16px var(--cond)}
+.opt input{width:19px;height:19px;accent-color:var(--amber)}
+.opt small{margin-left:auto;color:var(--dim);font-size:13px}
+.sw{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:8px;margin-top:2px}
+.swb{display:flex;flex-direction:column;align-items:center;gap:7px;padding:10px 6px;
+  border:1px solid var(--edge);border-radius:9px;background:var(--sheet);cursor:pointer;
+  font:600 11px var(--cond);letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
+.swb i{display:block;width:100%;height:24px;border-radius:5px}
+.swb:hover{border-color:var(--dim)}
+.swb[aria-pressed="true"]{border-color:var(--fg);color:var(--fg)}
 
-.c-del{display:flex;align-items:flex-start;justify-content:center}
-.del{width:30px;height:var(--lh);padding:0;border:0;background:transparent;color:var(--muted);font:600 15px var(--sans);cursor:pointer;opacity:0}
-.row:hover .del,.row:focus-within .del,.del:focus-visible{opacity:1}
-.del:hover{color:var(--warn)}
-
-.empty{margin-top:0;margin-bottom:0;padding:18px 16px;color:var(--muted);text-align:center}
-
-.eor{display:flex;justify-content:flex-end;align-items:baseline;gap:6px;flex-wrap:wrap;padding:10px 16px 8px;border-bottom:2px solid var(--vrule);font:700 17px/1.2 var(--cond)}
-.eor input{width:6ch;padding:0 4px;border:0;border-bottom:1.5px solid var(--vrule);background:transparent;font:700 18px var(--cond);text-align:center;font-variant-numeric:tabular-nums}
-.eor input:focus{outline:none;border-bottom-color:var(--pen);background:var(--hl)}
-.hint{margin:10px 20px 0;font:500 13px/1.4 var(--sans);color:var(--muted)}
-ul.hint{padding:0;list-style:none}
-ul.hint li{margin-top:4px}
-ul.hint li:first-child{margin-top:0}
-
-/* bottom bar */
-.actionbar{position:sticky;bottom:0;z-index:20;display:flex;gap:8px;margin:14px -12px 0;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--rule)}
-.actionbar .btn{flex:1;height:48px;font-size:17px}
-.actionbar .btn.primary{flex:1.5;font-size:19px}
-
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:center;gap:12px;max-width:calc(100% - 24px);padding:10px 14px;border-radius:6px;background:var(--ink);color:var(--paper);font:500 15px var(--sans)}
-.toast button{border:0;background:transparent;color:inherit;font:700 16px var(--cond);text-decoration:underline;cursor:pointer;padding:4px}
-.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(6,10,14,.55)}
-.dlg{width:100%;max-width:480px;max-height:90%;overflow:auto;padding:18px;border-radius:6px;background:var(--paper);border:1px solid var(--rule)}
-.dlg h3{margin:0 0 8px;font:700 22px/1.2 var(--cond)}
-.dlg p{margin:0 0 12px;color:var(--muted)}
-.dlg textarea{width:100%;height:200px;padding:8px;border:1px solid var(--rule);border-radius:4px;background:transparent;font:13px/1.35 ui-monospace,Menlo,Consolas,monospace}
-.acts{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
-
-/* phones: same six-column sheet, just tighter */
-@media screen and (max-width:719px){
-  .app{padding:10px 6px 0}
-  .actionbar{margin:14px -6px 0}
-  .tools .spacer{display:none}
+/* ---------- phone ---------- */
+@media screen and (max-width:767px){
+  .app{padding:10px 10px 0}
+  .actionbar{margin:16px -10px 0}
   .tools select{max-width:none;flex-basis:100%}
-  .tools .btn{flex:1 1 auto;padding:0 10px}
+  .tools .btn{flex:1 1 auto;padding:0 11px}
+  .tools .spacer{display:none}
   .save{flex-basis:100%;order:10}
-  .sheet{padding:20px 0 24px;--gutter:0px;--cols:40px 36px 36px minmax(0,1.5fr) 50px minmax(0,1fr) minmax(0,.85fr) var(--gutter)}
-  .title{font-size:38px;margin-bottom:16px}
-  .meta{margin:0 10px 20px;column-gap:14px}
-  .mf-prod span{font-size:14px;bottom:8px}
-  .mf-prod input{height:40px;padding:0 76px;font-size:24px;line-height:40px}
-  .mf input{font-size:16px}
-  .head{font-size:11.5px;letter-spacing:.01em}
-  .head span{padding:0 4px 6px}
-  .head span:nth-child(-n+3){padding-left:0;padding-right:0;text-align:center}
-  .c input,.c textarea{padding:0 4px;font-size:15px}
-  .setf{padding:0 4px;column-gap:8px}
-  .dur{padding:0 4px;font-size:15px}
-  .dur.bad{font-size:11px}
-  .sf{font-size:15px}
-  .sf-group{flex-wrap:wrap}
-  .c-scn input,.c-sht input,.c-tk input,.c-ft input{padding:0}
-  .head span:nth-child(5){padding-left:0;padding-right:0;font-size:10.5px}
-  .c-del{position:absolute;left:76px;top:var(--lh);width:36px;height:var(--lh);border:0}
-  .row:not(.active) .c-del{display:none}
-  .del{width:32px;opacity:1}
-  .head,#rows{margin-left:8px;margin-right:8px}
-  .empty,.eor{margin-left:8px;margin-right:8px}
-  .eor{padding:10px 8px 8px}
-  .hint{margin:10px 8px 0}
+
+  .hdr{grid-template-columns:minmax(0,1fr) auto auto;
+    grid-template-areas:"prod prod prod" "roll date chev" "crew crew crew" "acs acs acs" "gear gear gear"}
+  .hdr.folded .a-crew,.hdr.folded .a-acs,.hdr.folded .a-gear{display:none}
+  .hdr.folded .a-roll,.hdr.folded .a-date,.hdr.folded .a-chev{border-bottom-color:var(--edge)}
+  .a-chev{display:flex}
+  .a-date,.a-roll{border-right:0}
+  .a-date{text-align:right}
+  .a-date .datewrap{justify-content:flex-end}
+  .a-gear{border-bottom-color:var(--line)}
+  .hband{padding:11px 14px}
+  .a-prod{padding:15px 14px 13px}
+  .hrow{gap:12px 22px}
+  .fld input{font-size:13.5px}
+  .fld.prod input{font-size:25px}
+  .fld.rollno input{font-size:30px}
+
+  .head{display:none}
+  .row{grid-template-columns:minmax(0,1fr) auto auto;
+    grid-template-areas:"slate ft dur" "desc desc desc" "note note note";
+    gap:10px 11px;padding:12px 14px;-webkit-touch-callout:none}
+  .c-desc textarea,.c-note textarea{-webkit-touch-callout:default}
+  .lbl{display:block;margin-bottom:2px;font:600 9.5px/1.2 var(--cond);
+    letter-spacing:.13em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+  .c-slate{display:flex;align-items:baseline;gap:10px;grid-area:slate}
+  .c-scn,.c-sht,.c-tk{flex:0 0 auto;width:38px}
+  .c-ft{grid-area:ft;width:52px}
+  .digital .c-ft{width:92px}
+  .digital .c-tc input{font-size:12.5px}
+  .c-dur{width:56px}
+  .c-desc{grid-area:desc}
+  .c-ft input{text-align:left}
+  .c-dur{grid-area:dur}
+  .c-note{grid-area:note}
+  .c-del{display:none}   /* press and hold a take instead */
+  .pills{gap:1px 5px;margin-top:5px}
+  .pill.isnone{min-width:38px;padding-top:4px;padding-bottom:4px}
+  .pill{padding-top:1px;padding-bottom:1px;line-height:1.25}
+
+  .eor{padding:13px 14px}
+  .hint,.dur-hint{margin-left:2px;margin-right:2px}
 }
 
-@page{size:portrait;margin:12mm}
-@media print{
-  :root:root:root{--desk:#fff;--paper:#fff;--ink:#000;--muted:#555;--rule:#9aa6b2;--vrule:#000;--hl:transparent}
-  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  html,body{background:#fff}
-  .app{max-width:none;padding:0}
-  .head,#rows,.empty,.eor{margin-left:0;margin-right:0}
-  .tools,.actionbar,.toast,.modal,.hint,.c-del,.nochip,.head span:last-child,.hbtn svg{display:none !important}
-  .c .sf input.blank,.c .sf select.blank{border-bottom:0}
-  .sheet{border:0;box-shadow:none;padding:0;--gutter:0px;--cols:14mm 14mm 14mm minmax(0,1.9fr) 18mm minmax(0,1.25fr) minmax(0,1fr)}
-  .row{break-inside:avoid}
-  .title{margin-bottom:14px}
+@media (prefers-reduced-motion:reduce){
+  .chev,.toast{transition:none;animation:none}
 }
 @media (prefers-reduced-motion:no-preference){
   .toast{animation:up .18s ease-out}
   @keyframes up{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+}
+
+/* Ctrl+P falls back to a plain light print; Export PDF is the real output */
+@page{size:portrait;margin:12mm}
+@media print{
+  :root{--bg:#fff;--sheet:#fff;--band:#fff;--fg:#000;--dim:#555;--line:#bbb;--edge:#666;--chip:#fff;--amber:#000}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .tools,.actionbar,.toast,.modal,.tpick,.hint,.dur-hint,.c-del,.a-chev{display:none !important}
+  .app{max-width:none;padding:0}
+  .sheet{border:0;border-radius:0}
+  .row{break-inside:avoid}
+  .row.good{box-shadow:inset 3px 0 0 #000;background:none}
 }
 </style>
 </head>
@@ -264,39 +341,53 @@ ul.hint li:first-child{margin-top:0}
   </div>
 
   <main class="sheet" aria-label="Camera report">
-    <div class="meta">
-      <label class="mf mf-prod"><span>Production</span><input data-m="production" autocomplete="off"></label>
-      <label class="mf mf-date"><span>Date</span><input data-m="date" type="date"></label>
-      <label class="mf mf-camf"><span>Camera</span><input data-m="camera" list="dl-cam" autocomplete="off" spellcheck="false"></label>
-      <label class="mf mf-dir"><span>Director</span><input data-m="director" autocomplete="off" spellcheck="false"></label>
-      <label class="mf mf-dop"><span>DOP</span><input data-m="dop" autocomplete="off" spellcheck="false"></label>
-      <label class="mf mf-ac1"><span>1st AC</span><input data-m="ac1" autocomplete="off" spellcheck="false"></label>
-      <label class="mf mf-ac2"><span>2nd AC / Loader</span><input data-m="ac2" autocomplete="off" spellcheck="false"></label>
-      <label class="mf mf-stock"><span>Film stock</span><input data-m="stock" list="dl-stock" autocomplete="off" spellcheck="false"></label>
-      <label class="mf mf-mag"><span>Magazine #</span><input data-m="mag" autocomplete="off" spellcheck="false"></label>
+    <div class="hdr" id="hdr">
+      <div class="fld prod hband a-prod"><span>Production<button type="button" class="dot dot-prod" data-dot="prod" aria-label="Production colour"></button></span><input data-m="production" aria-label="Production" autocomplete="off" placeholder="Untitled"></div>
+      <div class="fld hband a-date"><span>Date</span>
+        <span class="datewrap"><input data-m="date" type="date" id="dateInput" aria-label="Date"><span class="dateshow" id="dateShow" aria-hidden="true"></span><svg class="dateicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></span>
+      </div>
+      <div class="fld rollno hband a-roll"><span>Roll #<button type="button" class="dot dot-roll" data-dot="roll" aria-label="Roll number colour"></button></span><input id="rollNo" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-label="Roll number" placeholder="A001"></div>
+      <button type="button" class="a-chev" id="hdChev" aria-expanded="false" aria-controls="hdr" aria-label="Show crew, camera and magazine">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="hband hrow a-crew">
+        <label class="fld"><span>Director</span><input data-m="director" autocomplete="off" spellcheck="false"></label>
+        <label class="fld"><span>DOP</span><input data-m="dop" autocomplete="off" spellcheck="false"></label>
+      </div>
+      <div class="hband hrow a-acs">
+        <label class="fld"><span>1st AC</span><input data-m="ac1" autocomplete="off" spellcheck="false"></label>
+        <label class="fld"><span>2nd AC / Loader</span><input data-m="ac2" autocomplete="off" spellcheck="false"></label>
+      </div>
+      <div class="hband hrow end a-gear">
+        <label class="fld"><span>Camera</span><span class="selwrap"><select data-m="camera" data-src="dl-cam" aria-label="Camera"></select><span class="caret" aria-hidden="true">▾</span></span></label>
+        <label class="fld"><span id="stockLbl">Film stock</span><span class="selwrap"><select data-m="stock" data-src="dl-stock" aria-label="Film stock"></select><span class="caret" aria-hidden="true">▾</span></span></label>
+        <label class="fld"><span id="magLbl">Magazine #</span><input data-m="mag" aria-label="Magazine number" autocomplete="off" spellcheck="false"></label>
+      </div>
     </div>
-    <h1 class="title"><label for="rollNo">Roll #</label><input id="rollNo" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-label="Roll number" placeholder="A001"></h1>
 
-    <div class="grid head" aria-hidden="true">
-      <span>SCENE</span><span>SHOT</span><span>TAKE</span><span><button type="button" class="hbtn" id="setCfg" aria-label="Settings column: choose fields">SETTINGS<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></span><span>FT COUNTER</span><span>DESCRIPTION</span><span>NOTES</span><span></span>
+    <div class="head" aria-hidden="true">
+      <span>Scene</span><span>Shot</span><span>Take</span>
+      <span><button type="button" class="hbtn" id="setCfg" aria-label="Settings: choose which ones you log">Description &amp; Settings<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></span>
+      <span class="n" id="ftHead">Footage</span><span class="n">Duration</span><span>Notes</span><span></span>
     </div>
     <div id="rows"></div>
     <p class="empty" id="empty">No takes yet. Tap “+ Take” to log the first one.</p>
 
     <div class="eor">
-      <label for="eorFt">End of roll #<span id="eorRoll"></span></label>
-      <input id="eorFt" inputmode="decimal" autocomplete="off" aria-label="End of roll footage">
-      <span>ft</span>
+      <span>End of roll #<span id="eorRoll"></span></span>
+      <span class="val"><input id="eorFt" inputmode="decimal" autocomplete="off" aria-label="End of roll footage"> ft</span>
     </div>
-    <p class="hint dur-hint" id="durHint" hidden></p>
-    <ul class="hint">
-      <li>Leave Scene and Shot blank while you stay on the same shot.</li>
-      <li>Leave Settings or Description blank to carry them down from the take above. Carried values show faintly, and anything you type shows in full ink.</li>
-      <li>Take durations under Notes are worked out from the FT counter, frame rate and film stock.</li>
-      <li>Tap the Settings heading to choose which settings you log.</li>
-      <li>When a filter comes off, pick None on that take and the filter stops carrying down.</li>
-    </ul>
   </main>
+
+  <p class="hint dur-hint" id="durHint" hidden></p>
+  <ul class="hint">
+    <li>Pick the camera first — it sets up the rest of the sheet. A film camera limits the stock list to that gauge; a digital one swaps film stock for media, Magazine # for Media #, and the footage counter for timecode in and out.</li>
+    <li>On a phone, press and hold a take to delete it.</li>
+    <li>Leave a setting or the description blank to carry it down from the take above. Carried settings stay flat and dim; ones you set on that take light up.</li>
+    <li>Durations are worked out from the footage counter, frame rate and film stock — or, on a digital camera, from the two timecodes.</li>
+    <li>Tap the Settings heading to choose which settings you log.</li>
+    <li>When a filter comes off, pick None on that take and the filter stops carrying down.</li>
+  </ul>
 
   <div class="actionbar">
     <button class="btn primary" id="addTake" type="button">+ Take</button>
@@ -306,7 +397,8 @@ ul.hint li:first-child{margin-top:0}
 </div>
 
 <datalist id="dl-stock"><option value="Kodak Vision3 500T 5219"><option value="Kodak Vision3 250D 5207"><option value="Kodak Vision3 200T 5213"><option value="Kodak Vision3 50D 5203"><option value="Kodak Double-X 5222"><option value="Kodak Vision3 500T 7219"><option value="Kodak Vision3 250D 7207"><option value="Kodak Vision3 200T 7213"><option value="Kodak Vision3 50D 7203"><option value="Kodak Double-X 7222"><option value="Kodak Ektachrome 100D 7294"></datalist>
-<datalist id="dl-cam"><option value="ARRICAM LT"><option value="ARRICAM ST"><option value="ARRI 435"><option value="ARRIFLEX 416"><option value="ARRIFLEX SR3"><option value="Panavision Millennium XL2"><option value="Panaflex Gold II"><option value="Moviecam Compact"><option value="Aaton XTR Prod"><option value="Aaton LTR"><option value="Bolex H16"><option value="Krasnogorsk-3"><option value="Beaulieu 4008"></datalist>
+<datalist id="dl-cam"><option value="ARRICAM LT"><option value="ARRICAM ST"><option value="ARRIFLEX 435"><option value="ARRIFLEX 416"><option value="ARRIFLEX 235"><option value="ARRIFLEX SR3"><option value="Panavision Millennium XL2"><option value="Panaflex Gold II"><option value="Moviecam Compact"><option value="Aaton XTR Prod"><option value="Aaton LTR"><option value="Bolex H16"><option value="Krasnogorsk-3"><option value="ARRI ALEXA 35"><option value="ARRI ALEXA Mini LF"><option value="ARRI ALEXA Mini"><option value="ARRI AMIRA"><option value="Sony VENICE 2"><option value="Sony VENICE 1"><option value="Sony BURANO"><option value="Sony FX9"><option value="Sony FX6"><option value="Sony FX3"><option value="RED V-RAPTOR 8K VV"><option value="RED KOMODO-X"><option value="Blackmagic URSA Cine 12K"><option value="Panavision DXL2"></datalist>
+<datalist id="dl-media"><option value="128GB"><option value="256GB"><option value="512GB"><option value="1TB"><option value="2TB"></datalist>
 <div class="tpick" id="tpick" role="dialog" aria-label="Choose value" hidden>
   <div class="tp-read"><b id="tpVal">T5.6</b><span id="tpNote"></span></div>
   <input class="tp-range" id="tpRange" type="range" min="0" max="24" step="1" aria-label="Value">
@@ -758,8 +850,8 @@ function incr(s){
 var FIELDS = [
   { k: 'fps',     name: 'Frame rate',    ex: '16 fps', pre: '',  suf: ' fps', mode: 'decimal' },
   { k: 'shutter', name: 'Shutter angle', ex: '180°',   pre: '',  suf: '°',    mode: 'decimal' },
-  { k: 'make',    name: 'Lens make',     ex: 'CZ Super Speed', pre: '', suf: '', mode: 'text', hint: 'lens make',
-    choices: ['CZ Super Speed', 'DZOFilm'] },
+  { k: 'make',    name: 'Lens name',     ex: 'CZ Super Speed', pre: '', suf: '', mode: 'text', hint: 'lens name',
+    choices: ['ARRI Signature Prime', 'CZ Super Speed', 'DZOFilm'] },
   { k: 'lens',    name: 'Lens',          ex: '24mm',   pre: '',  suf: 'mm',   mode: 'text' },
   { k: 't',       name: 'T-stop',        ex: 'T5.6',   pre: 'T', suf: '',     mode: 'decimal' },
   { k: 'filter',  name: 'Filter',        ex: 'ND.6',   pre: '',  suf: '',     mode: 'text', hint: 'filter',
@@ -779,18 +871,19 @@ var PICK = {
        vals: ['1.3','1.4','1.6','1.8','2','2.2','2.5','2.8','3.2','3.5','4','4.5','5','5.6','6.3','7.1','8','9','10','11','13','14','16','18','20','22'],
        marks: ['1.4','2','2.8','4','5.6','8','11','16','22'] },
   lens: { name: 'Focal length', def: '35', fmt: function(v){ return v + 'mm'; },
-       vals: ['8','9.5','10','10.5','12','14','16','18','21','24','25','27','28','29','32','35','40','47','50','55','58','60','65','75','85','90','95','100','125','135','150','180','200','250','280','300'],
+       vals: ['8','9.5','10','10.5','12','14','15','16','18','21','24','25','27','28','29','32','35','40','47','50','55','58','60','65','75','85','90','95','100','125','135','150','180','200','250','280','300'],
        marks: ['8','18','25','35','50','85','135','200','300'] }
 };
 function fields(){ return FIELDS.filter(function(f){ return state.fields.indexOf(f.k) >= 0; }); }
 function fmtField(f, v){ v = tr(v); return v ? (f.pre + v + f.suf).trim() : ''; }
 var fine = window.matchMedia ? matchMedia('(pointer:fine)').matches : true;
+function phone(){ return window.innerWidth < 768; }
 
 /* ---------- state ---------- */
 function today(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 function blankRoll(no, from){
   return { id: uid(), roll: no || '001', eor: '', rows: [],
-    production: from ? from.production || '' : '', date: from ? from.date || today() : today(), stock: from ? from.stock || '' : '', camera: from ? from.camera || '' : '',
+    production: from ? from.production || '' : '', date: today(), stock: from ? from.stock || '' : '', camera: from ? from.camera || '' : '',
     director: from ? from.director || '' : '', dop: from ? from.dop || '' : '', ac1: from ? from.ac1 || '' : '', ac2: from ? from.ac2 || '' : '', mag: '' };
 }
 function load(){
@@ -805,9 +898,52 @@ function load(){
   return { current: r.id, rolls: [r] };
 }
 var state = load();
-if (!Array.isArray(state.fields)) state.fields = ['fps', 't', 'make', 'lens'];
+var DEFAULT_FIELDS = ['fps', 'shutter', 'make', 'lens', 't', 'filter'];
+if (!Array.isArray(state.fields)) state.fields = DEFAULT_FIELDS.slice();
+if (state.accent && !state.accentProd){ state.accentProd = state.accent; state.accentRoll = state.accent; }
 if (!state.makeAdded){ state.makeAdded = true; if (state.fields.indexOf('make') < 0) state.fields.push('make'); }
+// one-time top-up to the full set bar Other, on every screen size
+if (!state.phoneDefaults){
+  state.phoneDefaults = true;
+  state.fields = DEFAULT_FIELDS.slice();
+}
+var ACCENTS = [
+  { k: 'amber',  name: 'Amber',  screen: '#F2A33C', print: '#B06A14' },
+  { k: 'ember',  name: 'Ember',  screen: '#FF7A5C', print: '#B93A22' },
+  { k: 'lime',   name: 'Lime',   screen: '#A8DC63', print: '#55771A' },
+  { k: 'mint',   name: 'Mint',   screen: '#5FD3A3', print: '#157051' },
+  { k: 'sky',    name: 'Sky',    screen: '#62C2E8', print: '#146685' },
+  { k: 'indigo', name: 'Indigo', screen: '#8FA6F5', print: '#36499F' },
+  { k: 'orchid', name: 'Orchid', screen: '#C08CF2', print: '#64349C' },
+  { k: 'bone',   name: 'Bone',   screen: '#EDE9E1', print: '#1E1E1C' }
+];
+function accentOf(which){
+  var key = which === 'roll' ? state.accentRoll : state.accentProd;
+  return ACCENTS.filter(function(x){ return x.k === key; })[0] || ACCENTS[0];
+}
+function applyAccent(){
+  var r = document.documentElement.style;
+  r.setProperty('--title', accentOf('prod').screen);
+  r.setProperty('--rollc', accentOf('roll').screen);
+}
+function rgb(hex){
+  var m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex || '');
+  return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : [0, 0, 0];
+}
+var DIGITAL_CAMERAS = ['ARRI ALEXA 35', 'ARRI ALEXA Mini LF', 'ARRI ALEXA Mini', 'ARRI AMIRA',
+  'Sony VENICE 2', 'Sony VENICE 1', 'Sony BURANO', 'Sony FX9', 'Sony FX6', 'Sony FX3', 'RED V-RAPTOR 8K VV', 'RED KOMODO-X',
+  'Blackmagic URSA Cine 12K', 'Panavision DXL2'];
+function isDigitalCam(c){ return DIGITAL_CAMERAS.indexOf(tr(c)) >= 0; }
+function digital(){ return isDigitalCam(cur().camera); }
+var CAMERA_GAUGE = {
+  'ARRICAM LT': 35, 'ARRICAM ST': 35, 'ARRIFLEX 435': 35, 'ARRIFLEX 235': 35,
+  'Panavision Millennium XL2': 35, 'Panaflex Gold II': 35, 'Moviecam Compact': 35,
+  'ARRIFLEX 416': 16, 'ARRIFLEX SR3': 16, 'Aaton XTR Prod': 16, 'Aaton LTR': 16,
+  'Bolex H16': 16, 'Krasnogorsk-3': 16
+};
+var RENAMED_CAMERAS = { 'ARRI 435': 'ARRIFLEX 435', 'ARRI 235': 'ARRIFLEX 235' };
 state.rolls.forEach(function(roll){
+  if (RENAMED_CAMERAS[roll.camera]) roll.camera = RENAMED_CAMERAS[roll.camera];
   roll.rows.forEach(function(r){
     if (!r.set) r.set = {};
     if (tr(r.settings)){
@@ -855,7 +991,7 @@ function resolve(rows){
 function fitW(inp){
   if (inp.tagName === 'SELECT'){
     var txt = inp.options[inp.selectedIndex] ? inp.options[inp.selectedIndex].textContent : '';
-    inp.style.width = Math.max(4, txt.length * 0.92 + 0.6) + 'ch'; return;
+    inp.style.width = Math.max(4, txt.length + 0.75) + 'ch'; return;
   }
   var n = (inp.value || inp.placeholder || '').length;
   inp.style.width = (inp.value ? Math.max(1, n + 0.4) : Math.max(2.5, n + 0.4)) + 'ch';
@@ -868,7 +1004,21 @@ function framesPerFoot(stock){
   return null;
 }
 function durations(roll, res){
-  var fpf = framesPerFoot(roll.stock), prev = 0, out = [];
+  var out = [];
+  if (isDigitalCam(roll.camera)){
+    roll.rows.forEach(function(r, i){
+      var fps = parseFloat(String((res[i] && res[i].set.fps) || '').replace(/[^\d.]/g, ''));
+      if (!tr(r.tcin) && !tr(r.tcout)){ out.push(null); return; }
+      if (!(fps > 0)){ out.push({ missing: 'fps' }); return; }
+      var a = tcFrames(r.tcin, fps), b = tcFrames(r.tcout, fps);
+      if (a == null || b == null){ out.push({ missing: 'tc' }); return; }
+      var d = b - a;
+      if (d < 0) d += 86400 * Math.round(fps);        // across midnight
+      out.push({ secs: Math.round(d / fps) });
+    });
+    return out;
+  }
+  var fpf = framesPerFoot(roll.stock), prev = 0;
   roll.rows.forEach(function(r, i){
     var ft = parseFloat(String(r.ft || '').replace(/[^\d.]/g, ''));
     if (isNaN(ft)){ out.push(null); return; }
@@ -893,6 +1043,8 @@ function refreshDur(res){
   h.hidden = !need;
   h.textContent = need === 'stock'
     ? 'To work out take durations, enter the film stock with its code, like 7219 for 16mm or 5219 for 35mm.'
+    : need === 'tc'
+    ? 'To work out take durations, enter both timecodes as HH:MM:SS:FF.'
     : 'To work out take durations, set a frame rate in Settings.';
 }
 function refreshDitto(){
@@ -901,21 +1053,26 @@ function refreshDitto(){
     var x = res[i]; if (!x) return;
     $$('[data-s]', el).forEach(function(inp){
       var k = inp.dataset.s, f = FIELDS.filter(function(ff){ return ff.k === k; })[0];
-      var inherited = inp.value ? '' : (x.inh[k] || '');
+      var own = tr(inp.value), none = isNone(own);
+      var inherited = own ? '' : (x.inh[k] || '');
       if (inp.tagName === 'SELECT') inp.options[0].textContent = inherited || f.hint || '';
-      else inp.placeholder = inp.value ? '' : (inherited || f.hint || '');
-      inp.classList.toggle('inh', !!inherited);
-      inp.classList.toggle('blank', !inp.value && !inherited);
-      inp.closest('.sf').classList.toggle('inh', !!inherited);
-      inp.closest('.sf').classList.toggle('blank', !inp.value && !inherited);
-      fitW(inp);
-      var none = inp.tagName === 'SELECT' && isNone(inp.value);
-      inp.classList.toggle('none', none);
-      if (none) inp.style.width = '0.6ch';
+      else inp.placeholder = own ? '' : (inherited || f.hint || '');
+      var isNoneSel = inp.tagName === 'SELECT' && none;
+      inp.classList.toggle('none', isNoneSel);
+      var pill = inp.closest('.pill');
+      pill.classList.toggle('on', !!own && !none);
+      pill.classList.toggle('isnone', isNoneSel);
+      if (isNoneSel) inp.style.width = ''; else fitW(inp);
+    });
+    ['scn', 'sht'].forEach(function(k){
+      var f = $('[data-k="' + k + '"]', el);
+      if (f){ f.placeholder = f.value ? '' : (x[k] || ''); f.classList.toggle('inh', !f.value && !!x[k]); }
     });
     var d = $('[data-k="desc"]', el), dInh = x.dD ? x.desc : '';
-    d.placeholder = dInh;
+    // no column header on a phone, so an empty description gets a hint instead
+    d.placeholder = dInh || (phone() ? 'Describe the shot' : '');
     d.classList.toggle('inh', !!dInh);
+    d.classList.toggle('ph', !dInh && !tr(d.value));
   });
   refreshDur(res);
 }
@@ -923,53 +1080,56 @@ function refreshDitto(){
 /* ---------- render ---------- */
 function grow(el){
   el.style.height = 'auto';
-  el.style.height = Math.max(+(el.dataset.min || 2), Math.ceil((el.scrollHeight - 1) / LH)) * LH + 'px';
+  el.style.height = el.scrollHeight + 'px';
 }
-function groupLens(parts){
-  var ks = fields().map(function(f){ return f.k; }), mi = ks.indexOf('make'), li = ks.indexOf('lens');
-  if (mi >= 0 && li === mi + 1){
-    parts.splice(mi, 2, '<span class="sf-group">' + parts[mi] + parts[mi + 1] + '</span>');
-  }
-  var first = mi >= 0 ? mi : li;
-  if (first > 0) parts.splice(first, 0, '<span class="sf-br" aria-hidden="true"></span>');
-  return parts.join('');
+function pillsHTML(r){
+  return fields().map(function(f){
+    var val = (r.set || {})[f.k] || '';
+    if (f.choices || f.groups){
+      function opt(o){ return '<option' + (o === val ? ' selected' : '') + '>' + esc(o) + '</option>'; }
+      var all = f.groups ? [].concat.apply([], f.groups.map(function(g){ return g.items; })) : f.choices;
+      var body = f.groups
+        ? f.groups.map(function(g){ return g.label ? '<optgroup label="' + esc(g.label) + '">' + g.items.map(opt).join('') + '</optgroup>' : g.items.map(opt).join(''); }).join('')
+        : f.choices.map(opt).join('');
+      if (val && all.indexOf(val) < 0) body += opt(val);
+      return '<label class="pill pill-sel pill-' + f.k + '"><select data-s="' + f.k + '" aria-label="' + f.name + '">' +
+        '<option value=""></option>' + body + '</select><span class="caret" aria-hidden="true">\u25BE</span></label>';
+    }
+    return '<label class="pill pill-' + f.k + (PICK[f.k] ? ' pill-pick' : '') + '">' +
+      (f.pre ? '<span class="ax">' + f.pre + '</span>' : '') +
+      '<input data-s="' + f.k + '" value="' + esc(val) + '"' +
+        (PICK[f.k] ? ' readonly inputmode="none" aria-haspopup="dialog"' : ' inputmode="' + f.mode + '"') +
+        ' aria-label="' + f.name + '" autocomplete="off" spellcheck="false">' +
+      (f.suf ? '<span class="ax">' + esc(f.suf.trim()) + '</span>' : '') +
+      (PICK[f.k] ? '<span class="caret" aria-hidden="true">\u25BE</span>' : '') +
+    '</label>';
+  }).join('');
 }
 function rowHTML(r){
   function one(k, label, cls, attrs){
     return '<label class="c ' + cls + '"><span class="lbl">' + label + '</span><input data-k="' + k + '" value="' + esc(r[k]) + '" autocomplete="off" spellcheck="false"' + (attrs || '') + '></label>';
   }
-  function multi(k, label, cls, ph){
-    return '<label class="c ' + cls + '"><span class="lbl">' + label + '</span><textarea data-k="' + k + '" rows="2" autocomplete="off" spellcheck="false"' + (ph ? ' placeholder="' + ph + '"' : '') + '>' + esc(r[k]) + '</textarea></label>';
-  }
-  return '<div class="grid row" data-id="' + r.id + '">' +
-    one('scn', 'Scene', 'c-scn', ' autocapitalize="characters"') +
-    one('sht', 'Shot', 'c-sht', ' autocapitalize="characters"') +
-    one('tk', 'Take', 'c-tk', ' inputmode="numeric"') +
-    '<div class="c c-set"><span class="lbl">Settings</span><div class="setf">' + groupLens(fields().map(function(f){
-      var val = (r.set || {})[f.k] || '';
-      if (f.choices || f.groups){
-        function opt(o){ return '<option' + (o === val ? ' selected' : '') + '>' + esc(o) + '</option>'; }
-        var all = f.groups ? [].concat.apply([], f.groups.map(function(g){ return g.items; })) : f.choices;
-        var body = f.groups
-          ? f.groups.map(function(g){ return g.label ? '<optgroup label="' + esc(g.label) + '">' + g.items.map(opt).join('') + '</optgroup>' : g.items.map(opt).join(''); }).join('')
-          : f.choices.map(opt).join('');
-        if (val && all.indexOf(val) < 0) body += opt(val);
-        return '<label class="sf sf-' + f.k + ' sf-sel"><select data-s="' + f.k + '" aria-label="' + f.name + '"><option value=""></option>' + body +
-          '</select><span class="caret" aria-hidden="true">▾</span></label>';
-      }
-      return '<label class="sf sf-' + f.k + (PICK[f.k] ? ' sf-pick' : '') + '">' + (f.pre ? '<span class="ax">' + f.pre + '</span>' : '') +
-        '<input data-s="' + f.k + '" value="' + esc((r.set || {})[f.k]) + '"' +
-          (PICK[f.k] ? ' readonly inputmode="none" aria-haspopup="dialog"' : ' inputmode="' + f.mode + '"') +
-          ' aria-label="' + f.name + '" autocomplete="off" spellcheck="false">' +
-        (f.suf ? '<span class="ax">' + esc(f.suf.trim()) + '</span>' : '') +
-        (PICK[f.k] ? '<span class="caret" aria-hidden="true">▾</span>' : '') +
-        '</label>';
-    })) + '</div></div>' +
-    one('ft', 'FT counter', 'c-ft', ' inputmode="decimal"') +
-    multi('desc', 'Description', 'c-desc') +
-    '<label class="c c-com"><span class="lbl">Notes</span><span class="dur" data-dur aria-live="off"></span>' +
-      '<textarea data-k="comment" data-min="1" rows="1" autocomplete="off" spellcheck="false">' + esc(r.comment) + '</textarea></label>' +
-    '<div class="c c-del"><button type="button" class="del" data-del aria-label="Delete this take" title="Delete take">✕</button></div>' +
+  return '<div class="row" data-id="' + r.id + '">' +
+    '<span class="c-slate">' +
+      one('scn', 'Scene', 'c-scn', ' autocapitalize="characters"') +
+      '<span class="sl" aria-hidden="true">/</span>' +
+      one('sht', 'Shot', 'c-sht', ' autocapitalize="characters"') +
+      '<span class="sl" aria-hidden="true">/</span>' +
+      one('tk', 'Take', 'c-tk', ' inputmode="numeric"') +
+    '</span>' +
+    '<div class="c c-desc">' +
+      '<textarea data-k="desc" rows="1" aria-label="Description" autocomplete="off" spellcheck="false">' + esc(r.desc) + '</textarea>' +
+      '<span class="pills">' + pillsHTML(r) + '</span>' +
+    '</div>' +
+    (digital()
+      ? '<div class="c c-ft c-tc"><span class="lbl">Timecode</span>' +
+          '<input data-k="tcin" value="' + esc(r.tcin) + '" inputmode="numeric" aria-label="Timecode start" placeholder="00:00:00:00" autocomplete="off" spellcheck="false">' +
+          '<input data-k="tcout" value="' + esc(r.tcout) + '" inputmode="numeric" aria-label="Timecode end" placeholder="00:00:00:00" autocomplete="off" spellcheck="false">' +
+        '</div>'
+      : one('ft', 'Footage', 'c-ft', ' inputmode="decimal"')) +
+    '<div class="c c-dur"><span class="lbl">Duration</span><span class="dur" data-dur aria-live="off"></span></div>' +
+    '<div class="c c-note"><span class="lbl">Notes</span><textarea data-k="comment" rows="1" aria-label="Notes" autocomplete="off" spellcheck="false">' + esc(r.comment) + '</textarea></div>' +
+    '<div class="c c-del"><button type="button" class="del" data-del aria-label="Delete this take" title="Delete take">\u2715</button></div>' +
   '</div>';
 }
 function renderRows(){
@@ -985,13 +1145,98 @@ function renderSelect(){
     return '<option value="' + r.id + '"' + (r.id === state.current ? ' selected' : '') + '>' + esc(rollLabel(r)) + '</option>';
   }).join('');
 }
-function sizeRoll(){ var i = $('#rollNo'); i.style.width = Math.max(3.4, (i.value || i.placeholder).length * 1.08 + 0.6) + 'ch'; }
+function sizeRoll(){
+  var i = $('#rollNo');
+  if (!i) return;
+  var n = (i.value || i.placeholder || '').length || 1;
+  var avail = i.clientWidth || 146;
+  var cap = window.innerWidth < 768 ? 30 : 46;
+  i.style.fontSize = Math.max(16, Math.min(cap, Math.floor(avail / (n * 0.62)))) + 'px';
+}
+function ordinal(n){
+  var rem100 = n % 100;
+  if (rem100 >= 11 && rem100 <= 13) return n + 'th';
+  return n + (['th', 'st', 'nd', 'rd'][n % 10] || 'th');
+}
+function fmtDateShow(v){
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || '');
+  if (!m) return '';
+  return ordinal(+m[3]) + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2] - 1] + ' ' + m[1];
+}
+function showDate(){ $('#dateShow').textContent = fmtDateShow(cur().date); }
+function syncStock(){
+  var sel = $('[data-m="stock"]'), cam = tr(cur().camera), dig = digital();
+  sel.dataset.src = dig ? 'dl-media' : 'dl-stock';
+  $('#stockLbl').textContent = dig ? 'Media' : 'Film stock';
+  sel.setAttribute('aria-label', dig ? 'Media' : 'Film stock');
+  $('#magLbl').textContent = dig ? 'Media #' : 'Magazine #';
+  $('[data-m="mag"]').setAttribute('aria-label', dig ? 'Media number' : 'Magazine number');
+  sel.disabled = !cam;
+  fillSelect(sel, cur().stock || '');
+  sel.options[0].textContent = cam ? '' : 'Pick a camera first';
+  fitSel(sel);
+}
+function syncMode(){
+  var dig = digital();
+  $('.sheet').classList.toggle('digital', dig);
+  $('#ftHead').textContent = dig ? 'Timecode' : 'Footage';
+  $('.eor .val').hidden = dig;   // the line stays, the footage field goes
+}
+function fitSel(sel){
+  var o = sel.options[sel.selectedIndex];
+  var txt = o ? o.textContent : '';
+  sel.style.width = Math.max(6, txt.length + 0.75) + 'ch';
+}
+function fmtTC(v){
+  var d = String(v == null ? '' : v).replace(/\D/g, '');
+  if (!d) return '';
+  d = d.slice(-8).padStart(8, '0');
+  return d.slice(0, 2) + ':' + d.slice(2, 4) + ':' + d.slice(4, 6) + ':' + d.slice(6, 8);
+}
+function tcFrames(v, fps){
+  var m = /^(\d{1,2}):(\d{2}):(\d{2})[:;](\d{1,2})$/.exec(tr(v));
+  if (!m || !(fps > 0)) return null;
+  var r = Math.round(fps);
+  if (+m[4] >= r) return null;
+  return ((+m[1] * 60 + +m[2]) * 60 + +m[3]) * r + +m[4];
+}
+function stockGauge(name){
+  var f = framesPerFoot(name);
+  return f === 40 ? 16 : f === 16 ? 35 : f === 12.8 ? 65 : null;
+}
+function fillSelect(sel, val){
+  var items = $$('#' + sel.dataset.src + ' option').map(function(o){ return o.value; });
+  if (sel.dataset.m === 'stock'){
+    var g = CAMERA_GAUGE[tr(cur().camera)];
+    if (g) items = items.filter(function(o){ return stockGauge(o) === g; });
+  }
+  if (val && items.indexOf(val) < 0) items.push(val);   // keep anything already logged
+  function opt(o){ return '<option' + (o === val ? ' selected' : '') + '>' + esc(o) + '</option>'; }
+  var body;
+  if (sel.dataset.m === 'camera'){
+    var film = items.filter(function(o){ return !isDigitalCam(o); });
+    var dig = items.filter(isDigitalCam);
+    body = (film.length ? '<optgroup label="Film">' + film.map(opt).join('') + '</optgroup>' : '') +
+           (dig.length ? '<optgroup label="Digital">' + dig.map(opt).join('') + '</optgroup>' : '');
+  } else {
+    body = items.map(opt).join('');
+  }
+  sel.innerHTML = '<option value=""></option>' + body;
+  sel.value = val || '';
+  fitSel(sel);
+}
 function renderHead(){
   var roll = cur();
   $('#rollNo').value = roll.roll || '';
   $('#eorRoll').textContent = roll.roll || '';
   $('#eorFt').value = roll.eor || '';
-  $$('[data-m]').forEach(function(el){ el.value = roll[el.dataset.m] || ''; });
+  $$('[data-m]').forEach(function(el){
+    if (el.tagName === 'SELECT') fillSelect(el, roll[el.dataset.m] || '');
+    else el.value = roll[el.dataset.m] || '';
+  });
+  showDate();
+  syncMode();
+  syncStock();
   sizeRoll();
 }
 function renderAll(){ renderSelect(); renderHead(); renderRows(); }
@@ -1000,7 +1245,7 @@ function renderAll(){ renderSelect(); renderHead(); renderRows(); }
 function addRow(kind){
   var roll = cur(), rows = roll.rows, prev = rows[rows.length - 1];
   var eff = prev ? resolve(rows)[rows.length - 1] : null;
-  var r = { id: uid(), scn: '', sht: '', tk: '1', set: {}, desc: '', comment: '' };
+  var r = { id: uid(), scn: '', sht: '', tk: '1', set: {}, desc: '', comment: '', ft: '', tcin: '', tcout: '' };
   var focusKey = 'comment';
   if (!prev){ focusKey = 'scn'; }
   else if (kind === 'take'){ r.tk = incr(prev.tk); }
@@ -1025,6 +1270,13 @@ function rowOf(el){
   var div = el.closest('.row'), roll = cur();
   return { div: div, row: roll.rows.filter(function(r){ return r.id === div.dataset.id; })[0], roll: roll };
 }
+rowsEl.addEventListener('change', function(e){
+  var k = e.target.dataset && e.target.dataset.k;
+  if (k !== 'tcin' && k !== 'tcout') return;
+  var o = rowOf(e.target), v = fmtTC(e.target.value);
+  e.target.value = v; o.row[k] = v;
+  refreshDur(); save();
+});
 rowsEl.addEventListener('input', function(e){
   var el = e.target, k = el.dataset && el.dataset.k;
   if (el.dataset && el.dataset.s){
@@ -1058,13 +1310,28 @@ rowsEl.addEventListener('keydown', function(e){
 rowsEl.addEventListener('click', function(e){
   var del = e.target.closest('[data-del]');
   if (!del) return;
-  var o = rowOf(del), idx = o.roll.rows.indexOf(o.row), removed = o.roll.rows.splice(idx, 1)[0], roll = o.roll;
-  renderRows(); renderSelect(); save();
-  toast('Take deleted', 'Undo', function(){
-    roll.rows.splice(idx, 0, removed);
-    if (cur() === roll){ renderRows(); renderSelect(); }
-    save();
-  });
+  var o = rowOf(del), roll = o.roll, idx = roll.rows.indexOf(o.row);
+  var x = resolve(roll.rows)[idx] || {};
+  var bits = [];
+  if (tr(x.scn)) bits.push('Scene ' + tr(x.scn));
+  if (tr(x.sht)) bits.push('shot ' + tr(x.sht));
+  if (tr(o.row.tk)) bits.push('take ' + tr(o.row.tk));
+  var desc = tr(o.row.desc) || tr(x.desc);
+  openModal('Delete this take?',
+    '<p>' + (bits.length ? esc(bits.join(', ')) : 'This take') +
+      (desc ? ' \u2014 ' + esc(desc) : '') + '</p>',
+    [{ label: 'Keep' }, { label: 'Delete take', cls: 'danger', fn: function(){
+      var at = roll.rows.indexOf(o.row);
+      if (at < 0) return;
+      var removed = roll.rows.splice(at, 1)[0];
+      if (cur() === roll) renderRows();
+      renderSelect(); save();
+      toast('Take deleted', 'Undo', function(){
+        roll.rows.splice(at, 0, removed);
+        if (cur() === roll) renderRows();
+        renderSelect(); save();
+      });
+    }}]);
 });
 
 $('#rollNo').addEventListener('input', function(e){
@@ -1072,8 +1339,40 @@ $('#rollNo').addEventListener('input', function(e){
 });
 $('#eorFt').addEventListener('input', function(e){ cur().eor = e.target.value; save(); });
 $$('[data-m]').forEach(function(el){
-  el.addEventListener('input', function(){ cur()[el.dataset.m] = el.value; if (el.dataset.m === 'stock') refreshDur(); save(); });
-  el.addEventListener('change', function(){ cur()[el.dataset.m] = el.value; save(); });
+  el.addEventListener('input', function(){
+    cur()[el.dataset.m] = el.value;
+    if (el.dataset.m === 'stock') refreshDur();
+    if (el.dataset.m === 'date') showDate();
+    save();
+  });
+  el.addEventListener('change', function(){
+    cur()[el.dataset.m] = el.value;
+    if (el.dataset.m === 'date') showDate();
+    if (el.tagName === 'SELECT'){
+      fitSel(el);
+      if (el.dataset.m === 'stock') refreshDur();
+      if (el.dataset.m === 'camera'){
+        var wasDig = $('.sheet').classList.contains('digital'), nowDig = digital();
+        if (wasDig !== nowDig){
+          if (tr(cur().stock)){
+            cur().stock = '';
+            toast(nowDig ? 'Film stock cleared \u2014 this is a digital camera.'
+                         : 'Media cleared \u2014 this is a film camera.');
+          }
+          syncMode(); renderRows();
+        } else {
+          var g = CAMERA_GAUGE[tr(el.value)], sg = stockGauge(tr(cur().stock));
+          if (g && sg && g !== sg){
+            cur().stock = '';
+            toast('Film stock cleared \u2014 it was ' + sg + 'mm and this camera is ' + g + 'mm.');
+          }
+        }
+        syncStock();
+        refreshDur();
+      }
+    }
+    save();
+  });
 });
 
 /* ---------- rolls ---------- */
@@ -1117,9 +1416,11 @@ function buildPDF(){
   var roll = cur(), res = resolve(roll.rows), fs = fields(), ds = durations(roll, res);
   var doc = new J({ unit: 'mm', format: 'a4', orientation: 'portrait' });
   var M = 15, W = 180, LH = 7, BOTTOM = 297 - 16;
-  var cw = [15, 13, 13, 51, 18, 40, 30], xs = [M];
+  var dig = isDigitalCam(roll.camera);
+  var inkProd = rgb(accentOf('prod').print), inkRoll = rgb(accentOf('roll').print);
+  var cw = dig ? [15, 13, 13, 48, 24, 37, 30] : [15, 13, 13, 51, 18, 40, 30], xs = [M];
   for (var c = 1; c < cw.length; c++) xs[c] = xs[c - 1] + cw[c - 1];
-  var labels = ['SCENE', 'SHOT', 'TAKE', 'SETTINGS', ['FT', 'COUNTER'], 'DESCRIPTION', 'NOTES'];
+  var labels = ['SCENE', 'SHOT', 'TAKE', 'SETTINGS', dig ? 'TIMECODE' : ['FT', 'COUNTER'], 'DESCRIPTION', 'NOTES'];
   var y, headTop;
   var rollName = 'Roll #' + (roll.roll || '');
 
@@ -1131,15 +1432,16 @@ function buildPDF(){
       var mf = [['Production', tr(roll.production), 180, M, M + 6, 15],
                 ['Director', tr(roll.director), CW, M, M + 16], ['Date', fmtDate(roll.date), CW, RX, M + 16],
                 ['DOP', tr(roll.dop), CW, M, M + 23], ['Camera', tr(roll.camera), CW, RX, M + 23],
-                ['1st AC', tr(roll.ac1), CW, M, M + 30], ['Film stock', tr(roll.stock), CW, RX, M + 30],
-                ['2nd AC / Loader', tr(roll.ac2), CW, M, M + 37], ['Magazine #', tr(roll.mag), CW, RX, M + 37]];
+                ['1st AC', tr(roll.ac1), CW, M, M + 30], [dig ? 'Media' : 'Film stock', tr(roll.stock), CW, RX, M + 30],
+                ['2nd AC / Loader', tr(roll.ac2), CW, M, M + 37], [dig ? 'Media #' : 'Magazine #', tr(roll.mag), CW, RX, M + 37]];
       mf.forEach(function(f){
         var mx = f[3], my = f[4];
         doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(95, 103, 112);
         doc.text(f[0], mx, my);
         var lw = doc.getTextWidth(f[0]) + 2.5, centered = !!f[5];
         var fsz = f[5] || 10.5;
-        doc.setFont('helvetica', f[5] ? 'bold' : 'normal'); doc.setFontSize(fsz); doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', f[5] ? 'bold' : 'normal'); doc.setFontSize(fsz);
+        if (f[5]) doc.setTextColor(inkProd[0], inkProd[1], inkProd[2]); else doc.setTextColor(0, 0, 0);
         var val = f[1] || '';
         var room = centered ? f[2] - 2 * lw - 2 : f[2] - lw - 1;
         while (fsz > 7 && doc.getTextWidth(val) > room){ fsz -= 0.5; doc.setFontSize(fsz); }
@@ -1148,8 +1450,10 @@ function buildPDF(){
         else doc.text(val, mx + lw, my);
         doc.setDrawColor(0, 0, 0); doc.setLineWidth(0.3); doc.line(mx, my + 1.6, mx + f[2], my + 1.6);
       });
-      doc.setFont('helvetica', 'bold'); doc.setTextColor(0, 0, 0);
-      doc.setFontSize(22); doc.text(rollName, 105, M + 51, { align: 'center' }); y = M + 65;
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(inkRoll[0], inkRoll[1], inkRoll[2]);
+      doc.setFontSize(22); doc.text(rollName, 105, M + 51, { align: 'center' });
+      doc.setTextColor(0, 0, 0); y = M + 65;
     }
     else { doc.setFontSize(13); doc.text(rollName + ' (continued)', 105, M + 5, { align: 'center' }); y = M + 15; }
     headTop = y - 5;
@@ -1233,7 +1537,14 @@ function buildPDF(){
     });
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
-    if (tr(r.ft)) doc.text(tr(r.ft), xs[4] + cw[4] / 2, base(0), { align: 'center' });
+    if (dig){
+      if (tr(r.tcin)) doc.text(tr(r.tcin), xs[4] + cw[4] / 2, base(0), { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      if (tr(r.tcout)) doc.text(tr(r.tcout), xs[4] + cw[4] / 2, base(1), { align: 'center' });
+      doc.setFont('helvetica', 'bold');
+    } else if (tr(r.ft)){
+      doc.text(tr(r.ft), xs[4] + cw[4] / 2, base(0), { align: 'center' });
+    }
     doc.setFont('helvetica', 'normal');
     if (descGrey) doc.setTextColor(150, 158, 166);
     descLines.forEach(function(l, k){ doc.text(l, xs[5] + 2, base(k)); });
@@ -1251,12 +1562,13 @@ function buildPDF(){
   }
   columnRules();
 
-  if (y + 14 > BOTTOM + 8){ doc.addPage(); header(false); columnRules(); }
   var eorTop = y;
+  if (y + 14 > BOTTOM + 8){ doc.addPage(); header(false); columnRules(); eorTop = y; }
   y += 7;
   doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(0, 0, 0);
   var ft = tr(roll.eor);
-  doc.text('End of roll #' + (roll.roll || '') + '   ' + (ft ? ft : '______') + ' ft', M + W - 2, y, { align: 'right' });
+  doc.text('End of roll #' + (roll.roll || '') + (dig ? '' : '   ' + (ft ? ft : '______') + ' ft'),
+    M + W - 2, y, { align: 'right' });
   y += 3;
   doc.setDrawColor(0, 0, 0); doc.setLineWidth(0.5); doc.line(M, y, M + W, y);
   doc.setDrawColor(40, 44, 48); doc.setLineWidth(0.35);
@@ -1304,14 +1616,15 @@ function fallbackSave(blob, name){
 function toCSV(){
   var roll = cur(), res = resolve(roll.rows), ds = durations(roll, res);
   function q(s){ return '"' + String(s == null ? '' : s).replace(/"/g, '""').replace(/\n/g, ' ') + '"'; }
-  var fs = fields();
-  var lines = [['Production','Director','DOP','1st AC','2nd AC / Loader','Date','Camera','Film stock','Magazine #','Roll','Scene','Shot','Take'].concat(fs.map(function(f){ return f.name; }), ['FT Counter','Description','Duration (s)','Notes']).map(q).join(',')];
+  var fs = fields(), dig = isDigitalCam(roll.camera);
+  var lines = [['Production','Director','DOP','1st AC','2nd AC / Loader','Date','Camera',dig ? 'Media' : 'Film stock',dig ? 'Media #' : 'Magazine #','Roll','Scene','Shot','Take'].concat(fs.map(function(f){ return f.name; }), dig ? ['TC start','TC end'] : ['FT Counter'], ['Description','Duration (s)','Notes']).map(q).join(',')];
   roll.rows.forEach(function(r, i){
     var x = res[i];
-    lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2, roll.date, roll.camera, roll.stock, roll.mag, roll.roll, x.scn, x.sht, r.tk].concat(fs.map(function(f){ return fmtField(f, x.set[f.k]); }), [r.ft || '', x.desc, ds[i] && ds[i].secs != null ? ds[i].secs : '', r.comment]).map(q).join(','));
+    lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2, roll.date, roll.camera, roll.stock, roll.mag, roll.roll, x.scn, x.sht, r.tk].concat(fs.map(function(f){ return fmtField(f, x.set[f.k]); }), (dig ? [r.tcin || '', r.tcout || ''] : [r.ft || '']), [x.desc, ds[i] && ds[i].secs != null ? ds[i].secs : '', r.comment]).map(q).join(','));
   });
   var blanks = fs.map(function(){ return ''; });
-  lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2, roll.date, roll.camera, roll.stock, roll.mag, roll.roll, '', '', ''].concat(blanks, ['', '', '', 'End of roll #' + roll.roll + (roll.eor ? ' ' + roll.eor + ' ft' : '')]).map(q).join(','));
+  lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2, roll.date, roll.camera, roll.stock, roll.mag, roll.roll, '', '', '']
+    .concat(blanks, dig ? ['', ''] : [''], ['', '', 'End of roll #' + roll.roll + (!dig && roll.eor ? ' ' + roll.eor + ' ft' : '')]).map(q).join(','));
   return lines.join('\n');
 }
 $('#btnCopy').addEventListener('click', function(){
@@ -1387,7 +1700,7 @@ $('#tpDone').addEventListener('click', function(){
   closeT(true);
 });
 rowsEl.addEventListener('click', function(e){
-  var t = e.target.closest('.sf-pick');
+  var t = e.target.closest('.pill-pick');
   if (t) openT($('input', t));
 });
 rowsEl.addEventListener('keydown', function(e){
@@ -1401,11 +1714,38 @@ tp.addEventListener('keydown', function(e){
 });
 document.addEventListener('pointerdown', function(e){
   if (tp.hidden) return;
-  if (tp.contains(e.target) || (tpInp && e.target.closest('.sf-pick') === tpInp.closest('.sf-pick'))) return;
+  if (tp.contains(e.target) || (tpInp && e.target.closest('.pill-pick') === tpInp.closest('.pill-pick'))) return;
   closeT(false);
 });
 window.addEventListener('resize', function(){ if (!tp.hidden) tpPlace(); });
+// the description hint belongs to the phone layout only, so follow the breakpoint
+if (window.matchMedia){
+  var mqPhone = matchMedia('(max-width: 767px)');
+  var onMQ = function(){ refreshDitto(); };
+  if (mqPhone.addEventListener) mqPhone.addEventListener('change', onMQ);
+  else if (mqPhone.addListener) mqPhone.addListener(onMQ);
+}
 window.addEventListener('scroll', function(){ if (!tp.hidden && !tp.classList.contains('sheet')) tpPlace(); }, { passive: true });
+
+/* ---------- accent colour ---------- */
+function openColour(which){
+  openModal(which === 'roll' ? 'Roll number colour' : 'Production colour',
+    '<p>On screen and in the exported PDF.</p><div class="sw">' + ACCENTS.map(function(a){
+      return '<button type="button" class="swb" data-a="' + a.k + '" aria-pressed="' +
+        (a.k === accentOf(which).k) + '"><i style="background:' + a.screen + '"></i>' + esc(a.name) + '</button>';
+    }).join('') + '</div>',
+    [{ label: 'Done', cls: 'primary' }]);
+  $('#mBody').onclick = function(e){
+    var b = e.target.closest('[data-a]');
+    if (!b) return;
+    if (which === 'roll') state.accentRoll = b.dataset.a; else state.accentProd = b.dataset.a;
+    applyAccent(); save();
+    $$('#mBody [data-a]').forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+  };
+}
+$$('[data-dot]').forEach(function(b){
+  b.addEventListener('click', function(e){ e.preventDefault(); openColour(b.dataset.dot); });
+});
 
 /* ---------- choose settings fields ---------- */
 $('#setCfg').addEventListener('click', function(){
@@ -1457,7 +1797,68 @@ function openModal(title, body, actions){
 $('#modal').addEventListener('click', function(e){ if (e.target.id === 'modal') closeModal(); });
 document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeModal(); });
 
+/* ---------- phone: press and hold a take to delete it ---------- */
+(function(){
+  var HOLD = 550, SLOP = 10;
+  var timer = null, row = null, x0 = 0, y0 = 0, fired = false;
+  function stop(){ if (timer) clearTimeout(timer); timer = null; row = null; }
+  rowsEl.addEventListener('touchstart', function(e){
+    fired = false;
+    if (window.innerWidth >= 768 || e.touches.length !== 1) return;
+    var t = e.target;
+    if (t.tagName === 'TEXTAREA') return;        // leave text selection alone there
+    var r = t.closest && t.closest('.row');
+    if (!r) return;
+    row = r; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    timer = setTimeout(function(){
+      timer = null; fired = true;
+      var btn = row && $('[data-del]', row);
+      row = null;
+      if (btn) btn.click();                      // same confirm step as the desktop ✕
+    }, HOLD);
+  }, { passive: true });
+  rowsEl.addEventListener('touchmove', function(e){
+    if (!timer) return;
+    var t = e.touches[0];
+    if (Math.abs(t.clientX - x0) > SLOP || Math.abs(t.clientY - y0) > SLOP) stop();
+  }, { passive: true });
+  rowsEl.addEventListener('touchend', stop);
+  rowsEl.addEventListener('touchcancel', stop);
+  rowsEl.addEventListener('contextmenu', function(e){
+    if (window.innerWidth >= 768 || e.target.tagName === 'TEXTAREA') return;
+    e.preventDefault();                          // no native menu over the gesture
+  });
+})();
+
+/* ---------- date: picked, not typed ----------
+   Opening is left to the browser's own picker trigger, stretched over the
+   whole cell in CSS. showPicker() is not used: it throws a SecurityError
+   in a cross-origin frame, which is where this page often runs. */
+(function(){
+  var inp = $('#dateInput');
+  if (!inp) return;
+  inp.addEventListener('keydown', function(e){
+    if (e.key && e.key.length === 1) e.preventDefault();  // no typed digits
+  });
+})();
+
+/* ---------- header fold (phone) ---------- */
+var hdr = $('#hdr'), hdChev = $('#hdChev');
+function setFold(folded){
+  hdr.classList.toggle('folded', folded);
+  hdChev.setAttribute('aria-expanded', String(!folded));
+  hdChev.setAttribute('aria-label', folded ? 'Show crew, camera and magazine' : 'Hide crew, camera and magazine');
+}
+setFold(true);
+try { if (localStorage.getItem(KEY + ':hdr') === 'open') setFold(false); } catch (e) {}
+hdChev.addEventListener('click', function(){
+  var folded = !hdr.classList.contains('folded');
+  setFold(folded);
+  try { localStorage.setItem(KEY + ':hdr', folded ? 'shut' : 'open'); } catch (e) {}
+});
+
 /* ---------- start ---------- */
+applyAccent();
 renderAll();
 writeNow();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ $$('#rows textarea').forEach(grow); });
