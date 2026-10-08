@@ -19,7 +19,7 @@
   --cond:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
   --gutter:30px;
-  --cols:46px 42px 42px minmax(200px,2.3fr) 64px 64px minmax(104px,1fr) var(--gutter);
+  --cols:46px 42px 66px minmax(200px,2.3fr) 64px 64px minmax(104px,1fr) var(--gutter);
   color-scheme:dark;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
@@ -51,7 +51,22 @@ button,input,select,textarea{font:inherit;color:inherit}
 
 /* ---------- the sheet ---------- */
 .sheet{background:var(--sheet);border:1px solid var(--edge);border-radius:10px}
-.sheet.digital{--cols:46px 42px 42px minmax(180px,2fr) 104px 64px minmax(96px,1fr) var(--gutter)}
+.sheet.digital{--cols:46px 42px 66px minmax(180px,2fr) 104px 64px minmax(96px,1fr) var(--gutter)}
+.c.c-clip input{font:500 13px/1.3 var(--mono);letter-spacing:.02em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+/* desktop: the clip name sits under Scene / Shot / Take across all three columns,
+   and everything else spans both lines so the clip stays tucked under the take */
+@media (min-width:768px){
+  .digital .row{grid-template-rows:auto auto 1fr}
+  .digital .row .c-scn{grid-area:1/1}
+  .digital .row .c-sht{grid-area:1/2}
+  .digital .row .c-tk{grid-area:1/3}
+  .digital .row > .c-clip{grid-area:2/1/3/4}
+  .digital .row > .c-desc{grid-area:1/4/4/5}
+  .digital .row > .c-ft{grid-area:1/5/4/6}
+  .digital .row > .c-dur{grid-area:1/6/4/7}
+  .digital .row > .c-note{grid-area:1/7/4/8}
+  .digital .row > .c-del{grid-area:1/8/4/9}
+}
 .c-tc input{font:500 13px/1.35 var(--mono);font-variant-numeric:tabular-nums}
 .c-tc input + input{margin-top:3px;color:var(--dim)}
 .c-tc input + input:focus{color:var(--fg)}
@@ -65,6 +80,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hband{padding:13px 20px;border-bottom:1px solid var(--line);min-width:0}
 .hband.end{border-bottom-color:var(--edge)}
 .hrow{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 38px;min-width:0}
+.f-dit,.f-res{display:none}.sheet.digital .f-dit,.sheet.digital .f-res{display:block}   /* digital-only fields */
 .a-prod{padding:20px 20px 16px;text-align:center}
 .a-date,.a-roll{display:flex;flex-direction:column;justify-content:center;
   border-right:1px solid var(--line)}
@@ -75,7 +91,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .fld input{display:block;width:100%;min-width:0;margin-top:3px;padding:0;border:0;
   background:transparent;font:500 14.5px/1.3 var(--mono);color:var(--fg)}
 .fld input::placeholder{color:var(--dim);opacity:.5}
-.selwrap{display:flex;align-items:center;gap:4px;margin-top:3px}
+.selwrap,.fld > .selwrap{display:flex;align-items:center;gap:4px;margin-top:3px}   /* beat ".fld > span{display:block}", so the caret can't drop a line */
+.selwrap .caret{flex:0 0 auto}
 .selwrap select{min-width:0;margin:0;padding:0;border:0;background:transparent;
   font:500 14.5px/1.3 var(--mono);color:var(--fg);cursor:pointer;
   -webkit-appearance:none;appearance:none}
@@ -103,7 +120,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   width:auto;height:auto;margin:0;padding:0;opacity:0;cursor:pointer}
 .dateshow{flex:0 0 auto;min-height:18px;font:500 13px/1.35 var(--mono);color:var(--fg);white-space:nowrap}
 .dateshow:empty::before{content:"Not set";color:var(--dim);opacity:.6}
-.dateicon{flex:0 0 auto;width:13px;height:13px;color:var(--dim)}
+.dateicon{display:inline-block;width:11px;height:11px;margin:0 0 0 6px;vertical-align:-1px;color:var(--dim)}   /* sits beside the Date caption */
 .fld:focus-within .dateicon{color:var(--amber)}
 
 /* phone only: the chevron that folds everything but roll and date away */
@@ -141,6 +158,16 @@ button,input,select,textarea{font:inherit;color:inherit}
 .c-scn input,.c-sht input,.c-tk input{font:500 15px/1.3 var(--mono);font-variant-numeric:tabular-nums}
 .c-tk input{font-weight:600;font-size:17px}
 .row.good .c-tk input{color:var(--amber)}
+/* circle a take: a ring beside the take number, filled with a tick once circled */
+.c-tk{display:flex;align-items:center;gap:6px}
+.c-tk input{flex:1 1 auto}
+.circ{position:relative;flex:0 0 auto;width:20px;height:20px;padding:0;border:1.5px solid var(--dim);border-radius:50%;
+  background:transparent;opacity:.55;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.circ:hover{opacity:1}
+.circ::before{content:'';position:absolute;inset:-8px}   /* a bigger target than the ring itself */
+.row.good .circ{opacity:1;border-color:var(--amber);background:var(--amber)}
+.row.good .circ::after{content:'';position:absolute;left:50%;top:50%;width:8px;height:4px;
+  border:solid var(--sheet);border-width:0 0 2px 2px;transform:translate(-50%,-70%) rotate(-45deg)}
 .c-scn input.inh,.c-sht input.inh{color:var(--dim)}
 .c-ft input,.dur{font:500 14.5px/1.35 var(--mono);font-variant-numeric:tabular-nums}
 .dur{display:block;min-height:20px;font-weight:600;font-size:15.5px;color:var(--fg);white-space:nowrap}
@@ -226,6 +253,83 @@ button,input,select,textarea{font:inherit;color:inherit}
   font-style:normal;color:var(--dim);font-variant-numeric:tabular-nums}
 .tp-acts{display:flex;justify-content:space-between;gap:8px;margin-top:4px}
 
+/* ---------- timecode slate: pure black, everything sized to the screen so it reads on camera ---------- */
+.slate{position:fixed;inset:0;z-index:60;display:grid;grid-template-rows:auto 1fr auto auto auto auto;
+  gap:1.2vh;padding:calc(14px + env(safe-area-inset-top,0px)) calc(18px + env(safe-area-inset-right,0px))
+  calc(12px + env(safe-area-inset-bottom,0px)) calc(18px + env(safe-area-inset-left,0px));
+  background:#000;color:#fff;overflow:hidden;-webkit-user-select:none;user-select:none}
+.slate[hidden]{display:none}
+.sl-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;min-width:0}
+.sl-prod{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font:700 min(6vw,7vh)/1.1 var(--cond);color:var(--title)}
+.sl-date{flex:0 0 auto;font:500 min(3vw,3.6vh)/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#bbb}
+.sl-main{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;
+  border-top:1px solid #333;border-bottom:1px solid #333}
+.sl-cell{min-width:0;padding:0 .4vw;text-align:center}
+.sl-cell + .sl-cell{border-left:1px solid #333}
+.sl-cell span{display:block;font:600 min(2.2vw,3vh)/1.4 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:#888}
+.sl-cell b{display:block;overflow:hidden;white-space:nowrap;font:600 min(9.5vw,19vh)/1.05 var(--mono);
+  letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.sl-cell b:empty::before{content:"\2013";color:#444}
+.sl-roll{color:var(--rollc)}
+/* the clip name hangs under the roll number without pushing it off the other values' line */
+.sl-cell{position:relative}
+.sl-clip{position:absolute;left:0;right:0;top:100%;margin-top:.3em;overflow:hidden;white-space:nowrap;font:600 min(2.8vw,4vh)/1.1 var(--mono);font-style:normal;letter-spacing:.02em;color:#bbb}
+.sl-tk{color:#fff}
+.slate.good .sl-tk{color:var(--amber)}
+.sl-sub{display:flex;flex-wrap:wrap;justify-content:center;gap:.4em 1.6em;
+  font:500 min(2.6vw,3.4vh)/1.2 var(--mono);color:#bbb;text-align:center}
+.sl-sub em{font-style:normal;color:#777;margin-right:.4em;font-family:var(--cond);letter-spacing:.14em;text-transform:uppercase}
+.sl-tcwrap{text-align:center}
+.sl-tc{font:600 min(12.5vw,17vh)/1 var(--mono);letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:#fff}
+.slate.frozen .sl-tc{color:var(--rollc)}
+.sl-src{margin-top:.6vh;font:600 min(2vw,2.6vh)/1.3 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:#777}
+.sl-msg{min-height:1.4em;text-align:center;font:500 15px/1.4 var(--cond);color:var(--amber)}
+.sl-bar{display:flex;align-items:center;justify-content:center;gap:8px}
+.sl-b{height:44px;min-width:44px;padding:0 14px;border:1px solid #333;border-radius:8px;background:#111;
+  font:600 16px var(--cond);color:#ddd;cursor:pointer}
+.sl-b:hover{border-color:#666}
+.sl-b:disabled{opacity:.35;cursor:default}
+#slPrev,#slNext{font-size:24px;line-height:1;padding:0 12px}
+.sl-clap{height:52px;min-width:140px;padding:0 26px;border:0;border-radius:10px;background:var(--rollc);
+  font:700 19px var(--cond);letter-spacing:.06em;text-transform:uppercase;color:#000;cursor:pointer}
+.sl-clap.rolling{background:#d93a2b;color:#fff}
+.sl-clap.rolling::before{content:"";display:inline-block;width:.55em;height:.55em;margin:0 .5em .08em 0;
+  border-radius:50%;background:#fff;vertical-align:middle;animation:slrec 1s steps(2,start) infinite}
+@keyframes slrec{to{visibility:hidden}}
+@media (prefers-reduced-motion:reduce){ .sl-clap.rolling::before{animation:none} }
+.sl-sync{position:absolute;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
+  width:min(440px,calc(100% - 28px));padding:14px 16px;border:1px solid #333;border-radius:12px;background:#0d0d0d}
+.sl-sync[hidden]{display:none}
+.sl-sync p{margin:0 0 10px;font:500 14px/1.45 var(--cond);color:#bbb}
+.sl-syncrow{display:flex;gap:8px}
+.sl-syncrow input{flex:1 1 auto;min-width:0;height:44px;padding:0 12px;border:1px solid #333;border-radius:8px;
+  background:#000;color:#fff;font:600 18px var(--mono);font-variant-numeric:tabular-nums}
+.sl-syncrow input:focus{outline:none;border-color:var(--rollc)}
+.sl-jam{background:var(--rollc);border-color:var(--rollc);color:#000}
+.sl-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.sl-flash.go{animation:slflash .22s ease-out}
+@keyframes slflash{from{opacity:1}to{opacity:0}}
+/* held upright: a 2 x 2 slate instead of one row of four */
+@media (orientation:portrait){
+  .sl-main{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr}
+  .sl-cell{padding:1.2vh .4vw}
+  .sl-cell:nth-child(3){border-left:0}
+  .sl-cell:nth-child(n+3){border-top:1px solid #333}
+  .sl-cell span{font-size:min(3.6vw,2.2vh)}
+  .sl-cell b{font-size:min(19vw,12vh)}
+  .sl-clip{font-size:min(5vw,2.8vh)}
+  .sl-prod{font-size:min(8vw,4.4vh)}
+  .sl-date{font-size:min(3.6vw,2.2vh)}
+  .sl-sub{font-size:min(3.6vw,2.2vh)}
+  .sl-tc{font-size:min(14vw,8vh)}
+  .sl-src{font-size:min(3vw,1.8vh)}
+  .sl-bar{flex-wrap:wrap;gap:6px}
+  .sl-b{padding:0 10px}
+  .sl-clap{order:-1;flex:1 0 100%}
+}
+@media (prefers-reduced-motion:reduce){ .sl-flash.go{animation-duration:.12s} }
+
 /* ---------- toast + modal ---------- */
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom,0px));
   z-index:40;display:flex;align-items:center;gap:12px;max-width:calc(100% - 24px);
@@ -277,6 +381,11 @@ button,input,select,textarea{font:inherit;color:inherit}
   .hband{padding:11px 14px}
   .a-prod{padding:15px 14px 13px}
   .hrow{gap:12px 22px}
+  .f-res .selwrap select{font-size:12.5px}   /* the longest re-sampled names still fit one line */
+  /* crew on shared columns: Director | DOP above 1st AC | 2nd AC / Loader | DIT (digital only),
+     so DOP always lines up with 2nd AC */
+  .a-acs,.a-crew{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) minmax(0,1fr);column-gap:14px}
+  .sheet.digital .a-acs > .fld > span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .fld input{font-size:13.5px}
   .fld.prod input{font-size:25px}
   .fld.rollno input{font-size:30px}
@@ -290,8 +399,13 @@ button,input,select,textarea{font:inherit;color:inherit}
     letter-spacing:.13em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
   .c-slate{display:flex;align-items:baseline;gap:10px;grid-area:slate}
   .c-scn,.c-sht,.c-tk{flex:0 0 auto;width:38px}
+  /* the ring sits in the free space right of the take, outside the slate's own width */
+  .c-tk{display:block;position:relative}
+  .c-tk .circ{position:absolute;left:calc(100% + 6px);bottom:0;width:22px;height:22px}
   .c-ft{grid-area:ft;width:52px}
   .digital .c-ft{width:92px}
+  .digital .row{grid-template-areas:"slate ft dur" "clip ft dur" "desc desc desc" "note note note"}
+  .digital .row > .c-clip{grid-area:clip;margin-top:-3px}
   .digital .c-tc input{font-size:12.5px}
   .c-dur{width:56px}
   .c-desc{grid-area:desc}
@@ -307,6 +421,13 @@ button,input,select,textarea{font:inherit;color:inherit}
   .hint,.dur-hint{margin-left:2px;margin-right:2px}
 }
 
+/* narrow phones on a digital roll: the timecode column is what crowds the ring, so tighten it */
+@media (max-width:379px){
+  .c-slate{gap:8px}
+  .digital .c-ft{width:80px}
+  .digital .c-tc input{font-size:11px}
+  .c-tk .circ{left:calc(100% + 4px);width:20px;height:20px}
+}
 @media (prefers-reduced-motion:reduce){
   .chev,.toast{transition:none;animation:none}
 }
@@ -332,6 +453,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 <div class="app">
   <div class="tools">
     <select id="rollSel" aria-label="Choose roll"></select>
+    <button class="btn" id="btnSlate" type="button">Slate</button>
     <button class="btn" id="btnNew" type="button">New roll</button>
     <button class="btn" id="btnCopy" type="button">Copy CSV</button>
     <button class="btn" id="btnPdf" type="button">Export PDF</button>
@@ -343,8 +465,8 @@ button,input,select,textarea{font:inherit;color:inherit}
   <main class="sheet" aria-label="Camera report">
     <div class="hdr" id="hdr">
       <div class="fld prod hband a-prod"><span>Production<button type="button" class="dot dot-prod" data-dot="prod" aria-label="Production colour"></button></span><input data-m="production" aria-label="Production" autocomplete="off" placeholder="Untitled"></div>
-      <div class="fld hband a-date"><span>Date</span>
-        <span class="datewrap"><input data-m="date" type="date" id="dateInput" aria-label="Date"><span class="dateshow" id="dateShow" aria-hidden="true"></span><svg class="dateicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></span>
+      <div class="fld hband a-date"><span>Date<svg class="dateicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></span>
+        <span class="datewrap"><input data-m="date" type="date" id="dateInput" aria-label="Date"><span class="dateshow" id="dateShow" aria-hidden="true"></span></span>
       </div>
       <div class="fld rollno hband a-roll"><span>Roll #<button type="button" class="dot dot-roll" data-dot="roll" aria-label="Roll number colour"></button></span><input id="rollNo" autocomplete="off" spellcheck="false" autocapitalize="characters" aria-label="Roll number" placeholder="A001"></div>
       <button type="button" class="a-chev" id="hdChev" aria-expanded="false" aria-controls="hdr" aria-label="Show crew, camera and magazine">
@@ -357,10 +479,12 @@ button,input,select,textarea{font:inherit;color:inherit}
       <div class="hband hrow a-acs">
         <label class="fld"><span>1st AC</span><input data-m="ac1" autocomplete="off" spellcheck="false"></label>
         <label class="fld"><span>2nd AC / Loader</span><input data-m="ac2" autocomplete="off" spellcheck="false"></label>
+        <label class="fld f-dit"><span>DIT</span><input data-m="dit" aria-label="DIT" autocomplete="off" spellcheck="false"></label>
       </div>
       <div class="hband hrow end a-gear">
         <label class="fld"><span>Camera</span><span class="selwrap"><select data-m="camera" data-src="dl-cam" aria-label="Camera"></select><span class="caret" aria-hidden="true">▾</span></span></label>
         <label class="fld"><span id="stockLbl">Film stock</span><span class="selwrap"><select data-m="stock" data-src="dl-stock" aria-label="Film stock"></select><span class="caret" aria-hidden="true">▾</span></span></label>
+        <label class="fld f-res"><span>Resolution</span><span class="selwrap"><select data-m="res" aria-label="Resolution"></select><span class="caret" aria-hidden="true">▾</span></span></label>
         <label class="fld"><span id="magLbl">Magazine #</span><input data-m="mag" aria-label="Magazine number" autocomplete="off" spellcheck="false"></label>
       </div>
     </div>
@@ -381,10 +505,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 
   <p class="hint dur-hint" id="durHint" hidden></p>
   <ul class="hint">
-    <li>Pick the camera first — it sets up the rest of the sheet. A film camera limits the stock list to that gauge; a digital one swaps film stock for media, Magazine # for Media #, and the footage counter for timecode in and out.</li>
-    <li>On a phone, press and hold a take to delete it.</li>
+    <li>Pick the camera first! It sets up the rest of the sheet. A film camera will display film stocks specific to its format; a digital one displays codec and resolution.</li>
     <li>Leave a setting or the description blank to carry it down from the take above. Carried settings stay flat and dim; ones you set on that take light up.</li>
-    <li>Durations are worked out from the footage counter, frame rate and film stock — or, on a digital camera, from the two timecodes.</li>
+    <li>Tap the ring beside a take number to circle that take. Circled takes are ringed in the PDF and marked in the CSV.</li>
+    <li>On a phone, press and hold a take to delete it.</li>
+    <li>Tap Slate for a full-screen timecode slate of the current take. On a digital roll, Clap logs that take’s TC in and turns to Rolling; press Rolling at cut to log TC out. The timecode runs from the phone’s clock, so use Sync to line it up with your camera.</li>
+    <li>Durations are worked out from footage counter, frame rate and film stock; for digital cameras, from start and end timecodes.</li>
     <li>Tap the Settings heading to choose which settings you log.</li>
     <li>When a filter comes off, pick None on that take and the filter stops carrying down.</li>
   </ul>
@@ -399,6 +525,43 @@ button,input,select,textarea{font:inherit;color:inherit}
 <datalist id="dl-stock"><option value="Kodak Vision3 500T 5219"><option value="Kodak Vision3 250D 5207"><option value="Kodak Vision3 200T 5213"><option value="Kodak Vision3 50D 5203"><option value="Kodak Double-X 5222"><option value="Kodak Vision3 500T 7219"><option value="Kodak Vision3 250D 7207"><option value="Kodak Vision3 200T 7213"><option value="Kodak Vision3 50D 7203"><option value="Kodak Double-X 7222"><option value="Kodak Ektachrome 100D 7294"></datalist>
 <datalist id="dl-cam"><option value="ARRICAM LT"><option value="ARRICAM ST"><option value="ARRIFLEX 435"><option value="ARRIFLEX 416"><option value="ARRIFLEX 235"><option value="ARRIFLEX SR3"><option value="Panavision Millennium XL2"><option value="Panaflex Gold II"><option value="Moviecam Compact"><option value="Aaton XTR Prod"><option value="Aaton LTR"><option value="Bolex H16"><option value="Krasnogorsk-3"><option value="ARRI ALEXA 35"><option value="ARRI ALEXA Mini LF"><option value="ARRI ALEXA Mini"><option value="ARRI AMIRA"><option value="Sony VENICE 2"><option value="Sony VENICE 1"><option value="Sony BURANO"><option value="Sony FX9"><option value="Sony FX6"><option value="Sony FX3"><option value="RED V-RAPTOR 8K VV"><option value="RED KOMODO-X"><option value="Blackmagic URSA Cine 12K"><option value="Panavision DXL2"></datalist>
 <datalist id="dl-media"><option value="128GB"><option value="256GB"><option value="512GB"><option value="1TB"><option value="2TB"></datalist>
+<!-- timecode insert slate: a full-screen view of the take, read from the report -->
+<div class="slate" id="slate" role="dialog" aria-modal="true" aria-label="Timecode slate" hidden>
+  <div class="sl-top">
+    <div class="sl-prod" id="slProd"></div>
+    <div class="sl-date" id="slDate"></div>
+  </div>
+  <div class="sl-main">
+    <div class="sl-cell"><span>Roll</span><b class="sl-roll" id="slRoll"></b><i class="sl-clip" id="slClip"></i></div>
+    <div class="sl-cell"><span>Scene</span><b id="slScn"></b></div>
+    <div class="sl-cell"><span>Shot</span><b id="slSht"></b></div>
+    <div class="sl-cell"><span>Take</span><b class="sl-tk" id="slTk"></b></div>
+  </div>
+  <div class="sl-sub" id="slSub"></div>
+  <div class="sl-tcwrap">
+    <div class="sl-tc" id="slTc">00:00:00:00</div>
+    <div class="sl-src" id="slSrc"></div>
+  </div>
+  <div class="sl-msg" id="slMsg" aria-live="polite"></div>
+  <div class="sl-bar">
+    <button type="button" class="sl-b" id="slPrev" aria-label="Previous take">&#8249;</button>
+    <button type="button" class="sl-b" id="slNext" aria-label="Next take">&#8250;</button>
+    <button type="button" class="sl-b" id="slAdd">+ Take</button>
+    <button type="button" class="sl-clap" id="slClap">Clap</button>
+    <button type="button" class="sl-b" id="slSync" aria-expanded="false">Sync</button>
+    <button type="button" class="sl-b" id="slClose" aria-label="Close slate">&#x2715;</button>
+  </div>
+  <div class="sl-sync" id="slSyncPanel" hidden>
+    <p>Type the timecode your camera is about to reach, then tap <b>Jam</b> the moment it gets there.</p>
+    <div class="sl-syncrow">
+      <input id="slJamIn" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="00:00:00:00" aria-label="Timecode to jam">
+      <button type="button" class="sl-b sl-jam" id="slJam">Jam</button>
+      <button type="button" class="sl-b" id="slTod">Time of day</button>
+    </div>
+  </div>
+  <div class="sl-flash" id="slFlash" aria-hidden="true"></div>
+</div>
+
 <div class="tpick" id="tpick" role="dialog" aria-label="Choose value" hidden>
   <div class="tp-read"><b id="tpVal">T5.6</b><span id="tpNote"></span></div>
   <input class="tp-range" id="tpRange" type="range" min="0" max="24" step="1" aria-label="Value">
@@ -847,11 +1010,27 @@ function incr(s){
   if (!m) return s ? s : '1';
   return s.slice(0, m.index) + String(parseInt(m[1], 10) + 1).padStart(m[1].length, '0') + s.slice(m.index + m[1].length);
 }
+/* clip names (digital): A001_C001, A001_C002 … The roll number leads; each new take is one
+   up from the take above. A name is fixed onto the take when it's added, so deleting a take
+   leaves a gap rather than renumbering the clips below it. */
+function rollBase(v){ return (tr(v) || '001').toUpperCase(); }
+function clipNames(roll){
+  var out = [], prev = '', base = rollBase(roll.roll);
+  roll.rows.forEach(function(r){
+    var c = tr(r.clip) || (prev ? incr(prev) : base + '_C001');
+    out.push(c); prev = c;
+  });
+  return out;
+}
+function pinClips(roll){
+  var names = clipNames(roll);
+  roll.rows.forEach(function(r, i){ if (!tr(r.clip)) r.clip = names[i]; });
+}
 var FIELDS = [
-  { k: 'fps',     name: 'Frame rate',    ex: '16 fps', pre: '',  suf: ' fps', mode: 'decimal' },
+  { k: 'fps',    name: 'Frame rate',    ex: '16 fps', pre: '',  suf: ' fps', mode: 'decimal' },
   { k: 'shutter', name: 'Shutter angle', ex: '180°',   pre: '',  suf: '°',    mode: 'decimal' },
   { k: 'make',    name: 'Lens name',     ex: 'CZ Super Speed', pre: '', suf: '', mode: 'text', hint: 'lens name',
-    choices: ['ARRI Signature Prime', 'CZ Super Speed', 'DZOFilm'] },
+    choices: ['ARRI Signature Prime', 'ARRI Ultra Prime', 'CZ Super Speed', 'DZOFilm'] },
   { k: 'lens',    name: 'Lens',          ex: '24mm',   pre: '',  suf: 'mm',   mode: 'text' },
   { k: 't',       name: 'T-stop',        ex: 'T5.6',   pre: 'T', suf: '',     mode: 'decimal' },
   { k: 'filter',  name: 'Filter',        ex: 'ND.6',   pre: '',  suf: '',     mode: 'text', hint: 'filter',
@@ -883,8 +1062,9 @@ function phone(){ return window.innerWidth < 768; }
 function today(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 function blankRoll(no, from){
   return { id: uid(), roll: no || '001', eor: '', rows: [],
-    production: from ? from.production || '' : '', date: today(), stock: from ? from.stock || '' : '', camera: from ? from.camera || '' : '',
-    director: from ? from.director || '' : '', dop: from ? from.dop || '' : '', ac1: from ? from.ac1 || '' : '', ac2: from ? from.ac2 || '' : '', mag: '' };
+    production: from ? from.production || '' : '', date: today(), stock: from ? from.stock || '' : '', res: from ? from.res || '' : '', camera: from ? from.camera || '' : '',
+    director: from ? from.director || '' : '', dop: from ? from.dop || '' : '', ac1: from ? from.ac1 || '' : '', ac2: from ? from.ac2 || '' : '', dit: from ? from.dit || '' : '', mag: '',
+    accent: from ? from.accent || '' : '' };   // the roll colour carries forward, then belongs to this roll alone
 }
 function load(){
   try {
@@ -901,6 +1081,11 @@ var state = load();
 var DEFAULT_FIELDS = ['fps', 'shutter', 'make', 'lens', 't', 'filter'];
 if (!Array.isArray(state.fields)) state.fields = DEFAULT_FIELDS.slice();
 if (state.accent && !state.accentProd){ state.accentProd = state.accent; state.accentRoll = state.accent; }
+// the roll colour used to be one setting for the whole sheet: pin it onto each roll that has none
+if (state.accentRoll && !state.rollAccents){
+  state.rollAccents = true;
+  state.rolls.forEach(function(r){ if (!r.accent) r.accent = state.accentRoll; });
+}
 if (!state.makeAdded){ state.makeAdded = true; if (state.fields.indexOf('make') < 0) state.fields.push('make'); }
 // one-time top-up to the full set bar Other, on every screen size
 if (!state.phoneDefaults){
@@ -917,8 +1102,9 @@ var ACCENTS = [
   { k: 'orchid', name: 'Orchid', screen: '#C08CF2', print: '#64349C' },
   { k: 'bone',   name: 'Bone',   screen: '#EDE9E1', print: '#1E1E1C' }
 ];
-function accentOf(which){
-  var key = which === 'roll' ? state.accentRoll : state.accentProd;
+function accentOf(which, roll){
+  // the roll colour lives on the roll; state.accentRoll is only the fallback for sheets saved before that
+  var key = which === 'roll' ? ((roll || cur()).accent || state.accentRoll) : state.accentProd;
   return ACCENTS.filter(function(x){ return x.k === key; })[0] || ACCENTS[0];
 }
 function applyAccent(){
@@ -934,6 +1120,45 @@ var DIGITAL_CAMERAS = ['ARRI ALEXA 35', 'ARRI ALEXA Mini LF', 'ARRI ALEXA Mini',
   'Sony VENICE 2', 'Sony VENICE 1', 'Sony BURANO', 'Sony FX9', 'Sony FX6', 'Sony FX3', 'RED V-RAPTOR 8K VV', 'RED KOMODO-X',
   'Blackmagic URSA Cine 12K', 'Panavision DXL2'];
 function isDigitalCam(c){ return DIGITAL_CAMERAS.indexOf(tr(c)) >= 0; }
+/* codec -> recording resolutions, per camera. Source: ARRI "Formats and Resolutions Overview"
+   v6.1 (Nov 2025). Where the camera re-samples in-camera, the sensor mode comes first and the
+   recorded size after the arrow; sizes are the recorded image in pixels. Other digital
+   cameras aren't set up yet. */
+var CODECS = {
+  'ARRI ALEXA 35': {
+    'ARRIRAW': [
+      '4.6K 3:2 Open Gate (4608×3164)', '4.6K 16:9 (4608×2592)', '4K 16:9 (4096×2304)',
+      '4K 2:1 (4096×2048)', '3.8K 16:9 UHD (3840×2160)', '3.3K 6:5 (3328×2790)',
+      '3K 1:1 (3072×3072)'],
+    'ProRes': [
+      '4.6K 3:2 Open Gate (4608×3164)', '4.6K 16:9 → 4K (4096×2304)', '4K 16:9 (4096×2304)',
+      '4K 16:9 → UHD (3840×2160)', '4K 16:9 → 2K (2048×1152)', '4K 16:9 → HD (1920×1080)',
+      '4K 2:1 (4096×2048)', '3.8K 16:9 UHD (3840×2160)', '3.3K 6:5 (3328×2790)',
+      '3.3K 6:5 → 4K 2.39:1 Ana 2x (4096×1716)', '3K 1:1 (3072×3072)',
+      '3K 1:1 → 3.8K 2:1 Ana 2x (3840×1920)', '2.7K 8:9 → UHD 16:9 Ana 2x (3840×2160)',
+      '2K 16:9 S16 (2048×1152)']
+  },
+  'ARRI ALEXA Mini LF': {
+    'ARRIRAW': [
+      '4.5K LF 3:2 Open Gate (4448×3096)', '4.5K LF 2.39:1 (4448×1856)', '3.8K LF 16:9 UHD (3840×2160)',
+      '2.8K LF 1:1 (2880×2880)', '3.4K S35 3:2 (3424×2202)'],
+    'ProRes': [
+      '4.5K LF 3:2 Open Gate (4448×3096)', '4.3K LF 16:9 → UHD (3840×2160)', '4.3K LF 16:9 → HD (1920×1080)',
+      '4.5K LF 2.39:1 (4448×1856)', '3.8K LF 16:9 UHD (3840×2160)', '3.8K LF 16:9 → 2K (2048×1152)',
+      '3.8K LF 16:9 → HD (1920×1080)', '2.8K LF 1:1 (2880×2880)', '3.2K S35 16:9 (3200×1800)',
+      '2.8K S35 4:3 (2880×2160)', '2.8K S35 16:9 → HD (1920×1080)']
+  },
+  'ARRI ALEXA Mini': {
+    'ARRIRAW': [
+      '3.4K Open Gate (3424×2202)', '2.8K 4:3 (2880×2160)', '2.8K 16:9 (2880×1620)',
+      '2K 2.39:1 Ana (2560×2145)', 'HD 16:9 Ana (1920×2160)'],
+    'ProRes': [
+      '4K UHD (3840×2160)', '3.2K (3200×1800)', '2K (2048×1152)', '2K 2.39:1 Ana (2048×858)',
+      'HD (1920×1080)', 'HD Ana (1920×1080)', 'S16 HD (1920×1080)']
+  }
+};
+function codecsFor(cam){ return CODECS[tr(cam)] || null; }
+function resFor(cam, codec){ var c = codecsFor(cam); return (c && c[tr(codec)]) || []; }
 function digital(){ return isDigitalCam(cur().camera); }
 var CAMERA_GAUGE = {
   'ARRICAM LT': 35, 'ARRICAM ST': 35, 'ARRIFLEX 435': 35, 'ARRIFLEX 235': 35,
@@ -944,6 +1169,7 @@ var CAMERA_GAUGE = {
 var RENAMED_CAMERAS = { 'ARRI 435': 'ARRIFLEX 435', 'ARRI 235': 'ARRIFLEX 235' };
 state.rolls.forEach(function(roll){
   if (RENAMED_CAMERAS[roll.camera]) roll.camera = RENAMED_CAMERAS[roll.camera];
+  if (isDigitalCam(roll.camera)) pinClips(roll);   // fix any clip names that were only worked out
   roll.rows.forEach(function(r){
     if (!r.set) r.set = {};
     if (tr(r.settings)){
@@ -1070,11 +1296,27 @@ function refreshDitto(){
     });
     var d = $('[data-k="desc"]', el), dInh = x.dD ? x.desc : '';
     // no column header on a phone, so an empty description gets a hint instead
-    d.placeholder = dInh || (phone() ? 'Describe the shot' : '');
+    d.placeholder = dInh || (phone() ? 'Shot Description here' : '');
     d.classList.toggle('inh', !!dInh);
     d.classList.toggle('ph', !dInh && !tr(d.value));
   });
   refreshDur(res);
+  refreshClips();
+}
+function refreshClips(){
+  var roll = cur(), names = clipNames(roll);
+  $$('#rows .row').forEach(function(el, i){
+    var f = $('[data-k="clip"]', el);
+    if (f && f !== document.activeElement) f.value = names[i] || '';   // never rewrite under the cursor
+    if (f) sizeClip(f);
+  });
+}
+// fill the cell's width: a mono glyph is ~0.62em with the tracking, so size to the name's length
+function sizeClip(f){
+  var n = (f.value || '').length || 9, w = f.clientWidth;
+  if (!w) return;
+  // a phone's clip line runs all the way to the timecode, so it may go larger than desktop's
+  f.style.fontSize = Math.max(11, Math.min(phone() ? 24 : 26, Math.floor(w / (n * 0.625)))) + 'px';
 }
 
 /* ---------- render ---------- */
@@ -1109,14 +1351,18 @@ function rowHTML(r){
   function one(k, label, cls, attrs){
     return '<label class="c ' + cls + '"><span class="lbl">' + label + '</span><input data-k="' + k + '" value="' + esc(r[k]) + '" autocomplete="off" spellcheck="false"' + (attrs || '') + '></label>';
   }
-  return '<div class="row" data-id="' + r.id + '">' +
+  return '<div class="row' + (r.good ? ' good' : '') + '" data-id="' + r.id + '">' +
     '<span class="c-slate">' +
       one('scn', 'Scene', 'c-scn', ' autocapitalize="characters"') +
       '<span class="sl" aria-hidden="true">/</span>' +
       one('sht', 'Shot', 'c-sht', ' autocapitalize="characters"') +
       '<span class="sl" aria-hidden="true">/</span>' +
-      one('tk', 'Take', 'c-tk', ' inputmode="numeric"') +
+      one('tk', 'Take', 'c-tk', ' inputmode="numeric"').replace('</label>',
+        '<button type="button" class="circ" data-circ aria-pressed="' + !!r.good + '" aria-label="Circle this take" title="Circle take"></button></label>') +
     '</span>' +
+    (digital()
+      ? '<label class="c c-clip"><span class="lbl">Clip</span><input data-k="clip" aria-label="Clip name" autocapitalize="characters" autocomplete="off" spellcheck="false"></label>'
+      : '') +
     '<div class="c c-desc">' +
       '<textarea data-k="desc" rows="1" aria-label="Description" autocomplete="off" spellcheck="false">' + esc(r.desc) + '</textarea>' +
       '<span class="pills">' + pillsHTML(r) + '</span>' +
@@ -1166,14 +1412,25 @@ function fmtDateShow(v){
 function showDate(){ $('#dateShow').textContent = fmtDateShow(cur().date); }
 function syncStock(){
   var sel = $('[data-m="stock"]'), cam = tr(cur().camera), dig = digital();
-  sel.dataset.src = dig ? 'dl-media' : 'dl-stock';
-  $('#stockLbl').textContent = dig ? 'Media' : 'Film stock';
-  sel.setAttribute('aria-label', dig ? 'Media' : 'Film stock');
+  sel.dataset.src = dig ? '' : 'dl-stock';   // digital: the codec list comes from CODECS
+  $('#stockLbl').textContent = dig ? 'Codec' : 'Film stock';
+  sel.setAttribute('aria-label', dig ? 'Codec' : 'Film stock');
   $('#magLbl').textContent = dig ? 'Media #' : 'Magazine #';
   $('[data-m="mag"]').setAttribute('aria-label', dig ? 'Media number' : 'Magazine number');
-  sel.disabled = !cam;
+  var known = !dig || !!codecsFor(cam);
+  sel.disabled = !cam || !known;
   fillSelect(sel, cur().stock || '');
-  sel.options[0].textContent = cam ? '' : 'Pick a camera first';
+  sel.options[0].textContent = !cam ? 'Pick a camera first' : known ? '' : 'Not set up for this camera yet';
+  fitSel(sel);
+  syncRes();
+}
+function syncRes(){
+  var sel = $('[data-m="res"]'), roll = cur(), dig = digital();
+  if (!dig){ sel.innerHTML = '<option value=""></option>'; return; }
+  var codec = tr(roll.stock), known = !!codecsFor(roll.camera);
+  sel.disabled = !codec || !known;
+  fillSelect(sel, roll.res || '');
+  sel.options[0].textContent = !known ? '' : codec ? '' : 'Pick a codec first';
   fitSel(sel);
 }
 function syncMode(){
@@ -1205,8 +1462,10 @@ function stockGauge(name){
   return f === 40 ? 16 : f === 16 ? 35 : f === 12.8 ? 65 : null;
 }
 function fillSelect(sel, val){
-  var items = $$('#' + sel.dataset.src + ' option').map(function(o){ return o.value; });
-  if (sel.dataset.m === 'stock'){
+  var items = sel.dataset.src ? $$('#' + sel.dataset.src + ' option').map(function(o){ return o.value; }) : [];
+  if (sel.dataset.m === 'stock' && digital()) items = Object.keys(codecsFor(cur().camera) || {});
+  else if (sel.dataset.m === 'res') items = resFor(cur().camera, cur().stock).slice();
+  else if (sel.dataset.m === 'stock'){
     var g = CAMERA_GAUGE[tr(cur().camera)];
     if (g) items = items.filter(function(o){ return stockGauge(o) === g; });
   }
@@ -1239,7 +1498,7 @@ function renderHead(){
   syncStock();
   sizeRoll();
 }
-function renderAll(){ renderSelect(); renderHead(); renderRows(); }
+function renderAll(){ applyAccent(); renderSelect(); renderHead(); renderRows(); }
 
 /* ---------- adding takes ---------- */
 function addRow(kind){
@@ -1252,6 +1511,7 @@ function addRow(kind){
   else if (kind === 'shot'){ r.scn = eff.scn; r.sht = incr(eff.sht); r.set = JSON.parse(JSON.stringify(eff.set)); if (r.set.filter === NOFILTER) delete r.set.filter; focusKey = 'sht'; }
   else if (kind === 'scene'){ r.sht = '1'; r.set = JSON.parse(JSON.stringify(eff.set)); if (r.set.filter === NOFILTER) delete r.set.filter; focusKey = 'scn'; }
   rows.push(r);
+  if (digital()) pinClips(roll);
   $('#rows').insertAdjacentHTML('beforeend', rowHTML(r));
   $('#empty').hidden = true;
   var el = $('#rows .row:last-child');
@@ -1272,6 +1532,14 @@ function rowOf(el){
 }
 rowsEl.addEventListener('change', function(e){
   var k = e.target.dataset && e.target.dataset.k;
+  if (k === 'clip'){
+    // a typed name is kept as is; cleared, it goes back to one up from the take above
+    var c = rowOf(e.target), v = tr(e.target.value).toUpperCase();
+    c.row.clip = '';
+    if (!v) v = clipNames(c.roll)[c.roll.rows.indexOf(c.row)];
+    c.row.clip = v; e.target.value = v;
+    refreshClips(); save(); return;
+  }
   if (k !== 'tcin' && k !== 'tcout') return;
   var o = rowOf(e.target), v = fmtTC(e.target.value);
   e.target.value = v; o.row[k] = v;
@@ -1308,6 +1576,15 @@ rowsEl.addEventListener('keydown', function(e){
   }
 });
 rowsEl.addEventListener('click', function(e){
+  var circ = e.target.closest('[data-circ]');
+  if (circ){
+    e.preventDefault();   // it sits inside the take's label; don't hand focus to the input
+    var t = rowOf(circ);
+    t.row.good = !t.row.good;
+    t.div.classList.toggle('good', t.row.good);
+    circ.setAttribute('aria-pressed', String(t.row.good));
+    save(); return;
+  }
   var del = e.target.closest('[data-del]');
   if (!del) return;
   var o = rowOf(del), roll = o.roll, idx = roll.rows.indexOf(o.row);
@@ -1335,7 +1612,10 @@ rowsEl.addEventListener('click', function(e){
 });
 
 $('#rollNo').addEventListener('input', function(e){
-  cur().roll = e.target.value; $('#eorRoll').textContent = e.target.value; sizeRoll(); renderSelect(); save();
+  // clips named after the old roll number take the new one; hand-typed names under another prefix stay
+  var was = rollBase(cur().roll) + '_', now = rollBase(e.target.value) + '_';
+  cur().rows.forEach(function(r){ var c = tr(r.clip); if (c && c.indexOf(was) === 0) r.clip = now + c.slice(was.length); });
+  cur().roll = e.target.value; $('#eorRoll').textContent = e.target.value; sizeRoll(); renderSelect(); refreshClips(); save();
 });
 $('#eorFt').addEventListener('input', function(e){ cur().eor = e.target.value; save(); });
 $$('[data-m]').forEach(function(el){
@@ -1351,15 +1631,29 @@ $$('[data-m]').forEach(function(el){
     if (el.tagName === 'SELECT'){
       fitSel(el);
       if (el.dataset.m === 'stock') refreshDur();
+      if (el.dataset.m === 'stock' && digital()){
+        // a new codec keeps the resolution only if that codec offers it too
+        if (tr(cur().res) && resFor(cur().camera, el.value).indexOf(cur().res) < 0){
+          cur().res = ''; toast('Resolution cleared \u2014 ' + (tr(el.value) || 'no codec') + ' doesn\u2019t offer it.');
+        }
+        syncRes();
+      }
       if (el.dataset.m === 'camera'){
         var wasDig = $('.sheet').classList.contains('digital'), nowDig = digital();
         if (wasDig !== nowDig){
-          if (tr(cur().stock)){
-            cur().stock = '';
+          if (tr(cur().stock) || tr(cur().res)){
+            cur().stock = ''; cur().res = '';
             toast(nowDig ? 'Film stock cleared \u2014 this is a digital camera.'
-                         : 'Media cleared \u2014 this is a film camera.');
+                         : 'Codec and resolution cleared \u2014 this is a film camera.');
           }
+          if (nowDig) pinClips(cur());
           syncMode(); renderRows();
+        } else if (nowDig){
+          // digital to digital: keep what the new camera also offers
+          var cs = codecsFor(el.value), lost = [];
+          if (tr(cur().stock) && !(cs && cs[cur().stock])){ cur().stock = ''; lost.push('codec'); }
+          if (tr(cur().res) && resFor(el.value, cur().stock).indexOf(cur().res) < 0){ cur().res = ''; lost.push('resolution'); }
+          if (lost.length) toast(lost.join(' and ').replace(/^./, function(c){ return c.toUpperCase(); }) + ' cleared \u2014 not offered on ' + tr(el.value) + '.');
         } else {
           var g = CAMERA_GAUGE[tr(el.value)], sg = stockGauge(tr(cur().stock));
           if (g && sg && g !== sg){
@@ -1417,11 +1711,11 @@ function buildPDF(){
   var doc = new J({ unit: 'mm', format: 'a4', orientation: 'portrait' });
   var M = 15, W = 180, LH = 7, BOTTOM = 297 - 16;
   var dig = isDigitalCam(roll.camera);
-  var inkProd = rgb(accentOf('prod').print), inkRoll = rgb(accentOf('roll').print);
+  var inkProd = rgb(accentOf('prod').print), inkRoll = rgb(accentOf('roll', roll).print);
   var cw = dig ? [15, 13, 13, 48, 24, 37, 30] : [15, 13, 13, 51, 18, 40, 30], xs = [M];
   for (var c = 1; c < cw.length; c++) xs[c] = xs[c - 1] + cw[c - 1];
   var labels = ['SCENE', 'SHOT', 'TAKE', 'SETTINGS', dig ? 'TIMECODE' : ['FT', 'COUNTER'], 'DESCRIPTION', 'NOTES'];
-  var y, headTop;
+  var y, headTop, gaps = [], clips = dig ? clipNames(roll) : [];
   var rollName = 'Roll #' + (roll.roll || '');
 
   function header(first){
@@ -1432,8 +1726,9 @@ function buildPDF(){
       var mf = [['Production', tr(roll.production), 180, M, M + 6, 15],
                 ['Director', tr(roll.director), CW, M, M + 16], ['Date', fmtDate(roll.date), CW, RX, M + 16],
                 ['DOP', tr(roll.dop), CW, M, M + 23], ['Camera', tr(roll.camera), CW, RX, M + 23],
-                ['1st AC', tr(roll.ac1), CW, M, M + 30], [dig ? 'Media' : 'Film stock', tr(roll.stock), CW, RX, M + 30],
-                ['2nd AC / Loader', tr(roll.ac2), CW, M, M + 37], [dig ? 'Media #' : 'Magazine #', tr(roll.mag), CW, RX, M + 37]];
+                ['1st AC', tr(roll.ac1), CW, M, M + 30], [dig ? 'Codec' : 'Film stock', tr(roll.stock), CW, RX, M + 30],
+                ['2nd AC / Loader', tr(roll.ac2), CW, M, M + 37], dig ? ['Resolution', tr(roll.res).replace(/\u2192/g, '>'), CW, RX, M + 37] : ['Magazine #', tr(roll.mag), CW, RX, M + 37]];
+      if (dig){ mf.push(['DIT', tr(roll.dit), CW, M, M + 44]); mf.push(['Media #', tr(roll.mag), CW, RX, M + 44]); }   // one more line, so the roll heading drops by one
       mf.forEach(function(f){
         var mx = f[3], my = f[4];
         doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(95, 103, 112);
@@ -1452,11 +1747,12 @@ function buildPDF(){
       });
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(inkRoll[0], inkRoll[1], inkRoll[2]);
-      doc.setFontSize(22); doc.text(rollName, 105, M + 51, { align: 'center' });
-      doc.setTextColor(0, 0, 0); y = M + 65;
+      var drop = dig ? 7 : 0;
+      doc.setFontSize(22); doc.text(rollName, 105, M + 51 + drop, { align: 'center' });
+      doc.setTextColor(0, 0, 0); y = M + 65 + drop;
     }
     else { doc.setFontSize(13); doc.text(rollName + ' (continued)', 105, M + 5, { align: 'center' }); y = M + 15; }
-    headTop = y - 5;
+    headTop = y - 5; gaps = [];
     doc.setFontSize(9.5);
     headTop = y - 9;
     labels.forEach(function(l, i){
@@ -1470,7 +1766,13 @@ function buildPDF(){
   }
   function columnRules(){
     doc.setDrawColor(40, 44, 48); doc.setLineWidth(0.35);
-    for (var i = 1; i <= 6; i++) doc.line(xs[i], headTop, xs[i], y);
+    for (var i = 1; i <= 6; i++){
+      if (i > 2 || !gaps.length){ doc.line(xs[i], headTop, xs[i], y); continue; }
+      // the Scene|Shot and Shot|Take rules break where a clip name runs across them
+      var from = headTop;
+      gaps.forEach(function(g){ if (g[0] > from) doc.line(xs[i], from, xs[i], g[0]); from = g[1]; });
+      if (y > from) doc.line(xs[i], from, xs[i], y);
+    }
     doc.line(M, headTop, M, y);
     doc.line(M + W, headTop, M + W, y);
   }
@@ -1528,6 +1830,18 @@ function buildPDF(){
     [['scn', 0], ['sht', 1], ['tk', 2]].forEach(function(p){
       if (tr(r[p[0]])) doc.text(tr(r[p[0]]), xs[p[1]] + cw[p[1]] / 2, base(0), { align: 'center' });
     });
+    if (r.good){
+      // circled on paper: a ring round the take number, sized to the number
+      var tw = doc.getTextWidth(tr(r.tk) || '0');
+      doc.setDrawColor(0, 0, 0); doc.setLineWidth(0.35);
+      doc.ellipse(xs[2] + cw[2] / 2, base(0) - 1.25, Math.max(2.9, tw / 2 + 1.6), 2.9, 'S');
+    }
+    if (dig && clips[i]){
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(60, 66, 72);
+      doc.text(clips[i], M + (cw[0] + cw[1] + cw[2]) / 2, base(1), { align: 'center' });
+      doc.setFontSize(10); doc.setTextColor(0, 0, 0);
+      gaps.push([y + LH, y + 2 * LH]);
+    }
     doc.setFont('helvetica', 'normal');
     setLines.forEach(function(line, k){
       line.forEach(function(t){
@@ -1616,15 +1930,15 @@ function fallbackSave(blob, name){
 function toCSV(){
   var roll = cur(), res = resolve(roll.rows), ds = durations(roll, res);
   function q(s){ return '"' + String(s == null ? '' : s).replace(/"/g, '""').replace(/\n/g, ' ') + '"'; }
-  var fs = fields(), dig = isDigitalCam(roll.camera);
-  var lines = [['Production','Director','DOP','1st AC','2nd AC / Loader','Date','Camera',dig ? 'Media' : 'Film stock',dig ? 'Media #' : 'Magazine #','Roll','Scene','Shot','Take'].concat(fs.map(function(f){ return f.name; }), dig ? ['TC start','TC end'] : ['FT Counter'], ['Description','Duration (s)','Notes']).map(q).join(',')];
+  var fs = fields(), dig = isDigitalCam(roll.camera), clips = dig ? clipNames(roll) : [];
+  var lines = [['Production','Director','DOP','1st AC','2nd AC / Loader'].concat(dig ? ['DIT'] : [], ['Date','Camera'], dig ? ['Codec','Resolution','Media #'] : ['Film stock','Magazine #'], ['Roll','Scene','Shot','Take','Circled'],dig ? ['Clip'] : [], fs.map(function(f){ return f.name; }), dig ? ['TC start','TC end'] : ['FT Counter'], ['Description','Duration (s)','Notes']).map(q).join(',')];
   roll.rows.forEach(function(r, i){
     var x = res[i];
-    lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2, roll.date, roll.camera, roll.stock, roll.mag, roll.roll, x.scn, x.sht, r.tk].concat(fs.map(function(f){ return fmtField(f, x.set[f.k]); }), (dig ? [r.tcin || '', r.tcout || ''] : [r.ft || '']), [x.desc, ds[i] && ds[i].secs != null ? ds[i].secs : '', r.comment]).map(q).join(','));
+    lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2].concat(dig ? [roll.dit || ''] : [], [roll.date, roll.camera, roll.stock], dig ? [roll.res || ''] : [], [roll.mag, roll.roll, x.scn, x.sht, r.tk, r.good ? 'Yes' : ''], dig ? [clips[i]] : [], fs.map(function(f){ return fmtField(f, x.set[f.k]); }), (dig ? [r.tcin || '', r.tcout || ''] : [r.ft || '']), [x.desc, ds[i] && ds[i].secs != null ? ds[i].secs : '', r.comment]).map(q).join(','));
   });
   var blanks = fs.map(function(){ return ''; });
-  lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2, roll.date, roll.camera, roll.stock, roll.mag, roll.roll, '', '', '']
-    .concat(blanks, dig ? ['', ''] : [''], ['', '', 'End of roll #' + roll.roll + (!dig && roll.eor ? ' ' + roll.eor + ' ft' : '')]).map(q).join(','));
+  lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2].concat(dig ? [roll.dit || ''] : [], [roll.date, roll.camera, roll.stock], dig ? [roll.res || ''] : [], [roll.mag, roll.roll, '', '', '', ''],
+    dig ? [''] : [], blanks, dig ? ['', ''] : [''], ['', '', 'End of roll #' + roll.roll + (!dig && roll.eor ? ' ' + roll.eor + ' ft' : '')]).map(q).join(','));
   return lines.join('\n');
 }
 $('#btnCopy').addEventListener('click', function(){
@@ -1717,7 +2031,7 @@ document.addEventListener('pointerdown', function(e){
   if (tp.contains(e.target) || (tpInp && e.target.closest('.pill-pick') === tpInp.closest('.pill-pick'))) return;
   closeT(false);
 });
-window.addEventListener('resize', function(){ if (!tp.hidden) tpPlace(); });
+window.addEventListener('resize', function(){ if (!tp.hidden) tpPlace(); $$('#rows [data-k="clip"]').forEach(sizeClip); });
 // the description hint belongs to the phone layout only, so follow the breakpoint
 if (window.matchMedia){
   var mqPhone = matchMedia('(max-width: 767px)');
@@ -1730,7 +2044,8 @@ window.addEventListener('scroll', function(){ if (!tp.hidden && !tp.classList.co
 /* ---------- accent colour ---------- */
 function openColour(which){
   openModal(which === 'roll' ? 'Roll number colour' : 'Production colour',
-    '<p>On screen and in the exported PDF.</p><div class="sw">' + ACCENTS.map(function(a){
+    '<p>' + (which === 'roll' ? 'This roll only. New rolls start from it.' : 'On every roll.') +
+    ' On screen and in the exported PDF.</p><div class="sw">' + ACCENTS.map(function(a){
       return '<button type="button" class="swb" data-a="' + a.k + '" aria-pressed="' +
         (a.k === accentOf(which).k) + '"><i style="background:' + a.screen + '"></i>' + esc(a.name) + '</button>';
     }).join('') + '</div>',
@@ -1738,7 +2053,7 @@ function openColour(which){
   $('#mBody').onclick = function(e){
     var b = e.target.closest('[data-a]');
     if (!b) return;
-    if (which === 'roll') state.accentRoll = b.dataset.a; else state.accentProd = b.dataset.a;
+    if (which === 'roll') cur().accent = b.dataset.a; else state.accentProd = b.dataset.a;
     applyAccent(); save();
     $$('#mBody [data-a]').forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
   };
@@ -1807,6 +2122,7 @@ document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeM
     if (window.innerWidth >= 768 || e.touches.length !== 1) return;
     var t = e.target;
     if (t.tagName === 'TEXTAREA') return;        // leave text selection alone there
+    if (t.closest && t.closest('[data-circ]')) return;   // holding the ring shouldn't delete
     var r = t.closest && t.closest('.row');
     if (!r) return;
     row = r; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
@@ -1855,6 +2171,164 @@ hdChev.addEventListener('click', function(){
   var folded = !hdr.classList.contains('folded');
   setFold(folded);
   try { localStorage.setItem(KEY + ':hdr', folded ? 'shut' : 'open'); } catch (e) {}
+});
+
+/* ---------- timecode slate ----------
+   Reads the take straight from the report. The timecode runs from the device clock (time of day),
+   optionally shifted by a jam offset. A browser can't receive real timecode, so this is a
+   close-enough insert slate, not a sync source. */
+if (!state.slate) state.slate = { offset: 0 };
+var slRollingId = null, slEl = $('#slate'), slIdx = -1, slRaf = 0, slFrozenUntil = 0, slLock = null, slMsgT = 0;
+var DAY = 86400000;
+function pad2(n){ return String(n).padStart(2, '0'); }
+function slFps(){
+  var roll = cur(), x = resolve(roll.rows)[slIdx];
+  var f = parseFloat(x && x.set && x.set.fps);
+  return f > 0 ? f : 24;
+}
+function msOfDay(){
+  var d = new Date(Date.now() + (state.slate.offset || 0));
+  return ((d.getHours() * 60 + d.getMinutes()) * 60 + d.getSeconds()) * 1000 + d.getMilliseconds();
+}
+function tcFromMs(ms, fps){
+  var r = Math.round(fps), total = Math.floor(ms * r / 1000), ff = total % r, s = Math.floor(total / r);
+  return pad2(Math.floor(s / 3600) % 24) + ':' + pad2(Math.floor(s / 60) % 60) + ':' + pad2(s % 60) + ':' + pad2(ff);
+}
+function slSay(t){
+  var m = $('#slMsg'); m.textContent = t || '';
+  clearTimeout(slMsgT); if (t) slMsgT = setTimeout(function(){ m.textContent = ''; }, 4000);
+}
+function slSrcText(fps){
+  var off = state.slate.offset || 0, r = Math.round(fps);
+  var label = Math.abs(off) < 1 ? 'Time of day' : 'Jammed ' + (off < 0 ? '−' : '+') + tcFromMs(Math.abs(off), fps);
+  return label + ' · ' + (fps % 1 ? fps : r) + ' fps';
+}
+function slRender(){
+  var roll = cur(), rows = roll.rows, res = resolve(rows), dig = digital();
+  if (slIdx >= rows.length) slIdx = rows.length - 1;
+  var r = rows[slIdx], x = res[slIdx] || {};
+  $('#slProd').textContent = tr(roll.production) || 'Untitled';
+  $('#slDate').textContent = fmtDateShow(roll.date);
+  $('#slRoll').textContent = tr(roll.roll);
+  $('#slScn').textContent = r ? tr(x.scn) : '';
+  $('#slSht').textContent = r ? tr(x.sht) : '';
+  $('#slTk').textContent = r ? tr(r.tk) : '';
+  slEl.classList.toggle('good', !!(r && r.good));
+  $('#slClip').textContent = dig && r ? (clipNames(roll)[slIdx] || '') : '';
+  var bits = [];
+  if (tr(roll.director)) bits.push(['Dir', tr(roll.director)]);
+  if (tr(roll.dop)) bits.push(['DOP', tr(roll.dop)]);
+  $('#slSub').innerHTML = bits.map(function(b){ return '<span><em>' + b[0] + '</em>' + esc(b[1]) + '</span>'; }).join('');
+  $('#slPrev').disabled = slIdx <= 0;
+  $('#slNext').disabled = slIdx >= rows.length - 1;
+  if (!r) slSay('No takes yet — tap + Take to start one.');
+  // the big button is Clap until pressed, then Rolling until the take is cut
+  var rolling = !!(r && slRollingId === r.id), b = $('#slClap');
+  b.textContent = rolling ? 'Rolling' : 'Clap';
+  b.classList.toggle('rolling', rolling);
+  b.setAttribute('aria-label', rolling ? 'Rolling — press to log TC out' : 'Clap — logs TC in');
+}
+function slTick(){
+  var fps = slFps();
+  if (performance.now() >= slFrozenUntil){
+    slEl.classList.remove('frozen');
+    $('#slTc').textContent = tcFromMs(msOfDay(), fps);
+  }
+  $('#slSrc').textContent = slSrcText(fps);
+  slRaf = requestAnimationFrame(slTick);
+}
+function openSlate(){
+  slIdx = cur().rows.length - 1;   // the take you're about to roll on
+  slEl.hidden = false; slSay('');
+  slRender();
+  cancelAnimationFrame(slRaf); slTick();
+  // keep the screen awake and fill it, where the browser allows
+  try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(function(l){ slLock = l; }, function(){}); } catch (e) {}
+  try { if (slEl.requestFullscreen) slEl.requestFullscreen().catch(function(){}); } catch (e) {}
+}
+function closeSlate(){
+  slEl.hidden = true; cancelAnimationFrame(slRaf);
+  $('#slSyncPanel').hidden = true; $('#slSync').setAttribute('aria-expanded', 'false');
+  try { if (slLock) slLock.release(); } catch (e) {} slLock = null;
+  try { if (document.fullscreenElement) document.exitFullscreen().catch(function(){}); } catch (e) {}
+}
+function slClap(){
+  var fps = slFps(), tc = tcFromMs(msOfDay(), fps);
+  slFrozenUntil = performance.now() + 1500;
+  slEl.classList.add('frozen'); $('#slTc').textContent = tc;
+  var fl = $('#slFlash'); fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
+  var roll = cur(), r = roll.rows[slIdx];
+  if (!r) return slSay('Clap at ' + tc + ' — no take to log it to.');
+  slRollingId = r.id; slRender();
+  if (!digital()) return slSay('Clap at ' + tc + '. Film roll, so nothing was logged.');
+  if (tr(r.tcin)) return slSay('Clap at ' + tc + '. Take ' + (tr(r.tk) || '') + ' already has TC in ' + r.tcin + ' — kept.');
+  r.tcin = tc;
+  var inp = $('#rows .row[data-id="' + r.id + '"] [data-k="tcin"]'); if (inp) inp.value = tc;
+  refreshDur(); save();
+  slSay('Logged ' + tc + ' as TC in for take ' + (tr(r.tk) || ''));
+}
+// Rolling pressed: the take is cut, so its timecode goes in as TC out
+function slCut(){
+  var fps = slFps(), tc = tcFromMs(msOfDay(), fps);
+  slFrozenUntil = performance.now() + 1500;
+  slEl.classList.add('frozen'); $('#slTc').textContent = tc;
+  var roll = cur(), r = roll.rows[slIdx];
+  slRollingId = null; slRender();
+  if (!r) return;
+  if (!digital()) return slSay('Cut at ' + tc + '. Film roll, so nothing was logged.');
+  if (tr(r.tcout)) return slSay('Cut at ' + tc + '. Take ' + (tr(r.tk) || '') + ' already has TC out ' + r.tcout + ' — kept.');
+  r.tcout = tc;
+  var inp = $('#rows .row[data-id="' + r.id + '"] [data-k="tcout"]'); if (inp) inp.value = tc;
+  refreshDur(); save();
+  slSay('Logged ' + tc + ' as TC out for take ' + (tr(r.tk) || ''));
+}
+function slPress(){
+  var r = cur().rows[slIdx];
+  if (r && slRollingId === r.id) slCut(); else slClap();
+}
+$('#btnSlate').addEventListener('click', openSlate);
+$('#slClose').addEventListener('click', closeSlate);
+$('#slClap').addEventListener('click', slPress);
+$('#slPrev').addEventListener('click', function(){ if (slIdx > 0){ slIdx--; slRender(); slSay(''); } });
+$('#slNext').addEventListener('click', function(){ if (slIdx < cur().rows.length - 1){ slIdx++; slRender(); slSay(''); } });
+$('#slAdd').addEventListener('click', function(){
+  addRow('take'); if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  slIdx = cur().rows.length - 1; slRender(); slSay('Take ' + (tr(cur().rows[slIdx].tk) || '') + ' added.');
+});
+$('#slSync').addEventListener('click', function(){
+  var p = $('#slSyncPanel'); p.hidden = !p.hidden; this.setAttribute('aria-expanded', String(!p.hidden));
+  if (!p.hidden){ var j = $('#slJamIn'); if (!j.value) j.value = tcFromMs(msOfDay() + 10000, slFps()).replace(/:\d\d$/, ':00'); }
+});
+$('#slJamIn').addEventListener('change', function(){ this.value = fmtTC(this.value); });
+$('#slJam').addEventListener('click', function(){
+  var fps = slFps(), r = Math.round(fps), tc = fmtTC($('#slJamIn').value);
+  var f = tcFrames(tc, fps);
+  if (f == null) return slSay('Enter the timecode as HH:MM:SS:FF.');
+  // shift the clock so it reads exactly this timecode right now
+  var want = f * 1000 / r, d = new Date(), now = ((d.getHours() * 60 + d.getMinutes()) * 60 + d.getSeconds()) * 1000 + d.getMilliseconds();
+  var off = ((want - now) % DAY + DAY) % DAY; if (off > DAY / 2) off -= DAY;
+  state.slate.offset = Math.round(off); save();
+  $('#slSyncPanel').hidden = true; $('#slSync').setAttribute('aria-expanded', 'false');
+  slSay('Jammed to ' + tc + '.');
+});
+$('#slTod').addEventListener('click', function(){
+  state.slate.offset = 0; save();
+  $('#slSyncPanel').hidden = true; $('#slSync').setAttribute('aria-expanded', 'false');
+  slSay('Back on time of day.');
+});
+document.addEventListener('keydown', function(e){
+  if (slEl.hidden || e.target === $('#slJamIn')) return;
+  if (e.key === 'Escape') return closeSlate();
+  if (e.target.tagName === 'BUTTON' && (e.key === ' ' || e.key === 'Enter')) return;   // let a focused button act
+  if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); slPress(); }
+  else if (e.key === 'ArrowLeft') $('#slPrev').click();
+  else if (e.key === 'ArrowRight') $('#slNext').click();
+});
+document.addEventListener('visibilitychange', function(){
+  // the wake lock drops when the page is hidden; take it back on return
+  if (!slEl.hidden && document.visibilityState === 'visible' && navigator.wakeLock){
+    try { navigator.wakeLock.request('screen').then(function(l){ slLock = l; }, function(){}); } catch (e) {}
+  }
 });
 
 /* ---------- start ---------- */
