@@ -80,6 +80,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hband{padding:13px 20px;border-bottom:1px solid var(--line);min-width:0}
 .hband.end{border-bottom-color:var(--edge)}
 .hrow{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 38px;min-width:0}
+.sheet.slatemode .c-sht,.sheet.slatemode #hSht{display:none}   /* slate numbering: one Slate number, no shot */
+.slate.sm .sl-cell:nth-child(3){display:none}
+@media (orientation:landscape){ .slate.sm .sl-main{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (min-width:768px){
+  .sheet.slatemode .row .c-scn,.sheet.slatemode #hScn{grid-column:1 / 3;grid-row:1}
+}
 .f-dit,.f-res{display:none}.sheet.digital .f-dit,.sheet.digital .f-res{display:block}   /* digital-only fields */
 .a-prod{padding:20px 20px 16px;text-align:center}
 .a-date,.a-roll{display:flex;flex-direction:column;justify-content:center;
@@ -142,6 +148,10 @@ button,input,select,textarea{font:inherit;color:inherit}
   font:inherit;line-height:1;letter-spacing:inherit;color:inherit;cursor:pointer;text-align:left}
 .hbtn svg{flex:0 0 auto;width:12px;height:12px;margin:-1px 0;color:var(--dim)}
 .hbtn:hover,.hbtn:hover svg{color:var(--amber)}
+#numCfg{text-transform:uppercase}   /* matches SCENE / SHOT beside it */
+.numgear{display:none;padding:0 0 0 5px;border:0;background:transparent;color:var(--dim);cursor:pointer;vertical-align:-1px}
+.numgear svg{width:10px;height:10px}
+@media (max-width:767px){ .row:first-child .numgear{display:inline-block} }
 
 .row{position:relative;padding-top:11px;padding-bottom:11px;border-bottom:1px solid var(--line);align-items:baseline}
 .row.good{box-shadow:inset 3px 0 0 var(--amber);
@@ -251,6 +261,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 .tp-ticks i.full{height:9px;opacity:.9}
 .tp-ticks em{position:absolute;top:11px;transform:translateX(-50%);font:500 11.5px/1 var(--mono);
   font-style:normal;color:var(--dim);font-variant-numeric:tabular-nums}
+.tp-zoom{margin:2px 0 6px;padding-top:10px;border-top:1px solid var(--edge)}
+.tp-zt{display:flex;align-items:center;gap:8px;font:500 14px var(--cond);color:var(--fg);cursor:pointer}
+.tp-zt input{width:16px;height:16px;margin:0;accent-color:var(--rollc)}
+.tp-end{margin-top:10px}
+.tp-tl{display:flex;justify-content:space-between;margin:-2px 2px 0;font:500 11.5px var(--cond);color:var(--dim)}
+.tp-end .tp-read b,#tpTint .tp-read b{font-size:24px}
 .tp-acts{display:flex;justify-content:space-between;gap:8px;margin-top:4px}
 
 /* ---------- timecode slate: pure black, everything sized to the screen so it reads on camera ---------- */
@@ -316,6 +332,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   .sl-cell{padding:1.2vh .4vw}
   .sl-cell:nth-child(3){border-left:0}
   .sl-cell:nth-child(n+3){border-top:1px solid #333}
+  .slate.sm .sl-cell:nth-child(4){grid-column:1 / -1;border-left:0}
   .sl-cell span{font-size:min(3.6vw,2.2vh)}
   .sl-cell b{font-size:min(19vw,12vh)}
   .sl-clip{font-size:min(5vw,2.8vh)}
@@ -399,6 +416,7 @@ button,input,select,textarea{font:inherit;color:inherit}
     letter-spacing:.13em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
   .c-slate{display:flex;align-items:baseline;gap:10px;grid-area:slate}
   .c-scn,.c-sht,.c-tk{flex:0 0 auto;width:38px}
+  .sheet.slatemode .c-scn{width:56px}
   /* the ring sits in the free space right of the take, outside the slate's own width */
   .c-tk{display:block;position:relative}
   .c-tk .circ{position:absolute;left:calc(100% + 6px);bottom:0;width:22px;height:22px}
@@ -490,7 +508,7 @@ button,input,select,textarea{font:inherit;color:inherit}
     </div>
 
     <div class="head" aria-hidden="true">
-      <span>Scene</span><span>Shot</span><span>Take</span>
+      <span id="hScn">Scene</span><span id="hSht">Shot</span><span><button type="button" class="hbtn" id="numCfg" aria-label="Take numbering: Scene / Shot / Take or Slate / Take">Take<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></span>
       <span><button type="button" class="hbtn" id="setCfg" aria-label="Settings: choose which ones you log">Description &amp; Settings<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></span>
       <span class="n" id="ftHead">Footage</span><span class="n">Duration</span><span>Notes</span><span></span>
     </div>
@@ -506,6 +524,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   <p class="hint dur-hint" id="durHint" hidden></p>
   <ul class="hint">
     <li>Pick the camera first! It sets up the rest of the sheet. A film camera will display film stocks specific to its format; a digital one displays codec and resolution.</li>
+    <li>If your production numbers by slate, tap the gear beside Take and choose Slate / Take. New shot becomes New slate, which moves to the next slate and starts again at take 1.</li>
     <li>Leave a setting or the description blank to carry it down from the take above. Carried settings stay flat and dim; ones you set on that take light up.</li>
     <li>Tap the ring beside a take number to circle that take. Circled takes are ringed in the PDF and marked in the CSV.</li>
     <li>On a phone, press and hold a take to delete it.</li>
@@ -513,6 +532,7 @@ button,input,select,textarea{font:inherit;color:inherit}
     <li>Durations are worked out from footage counter, frame rate and film stock; for digital cameras, from start and end timecodes.</li>
     <li>Tap the Settings heading to choose which settings you log.</li>
     <li>When a filter comes off, pick None on that take and the filter stops carrying down.</li>
+    <li>On a zoom lens, the focal length slider covers that lens’s range. Tick “Zoomed during the take” to log where it started and ended.</li>
   </ul>
 
   <div class="actionbar">
@@ -533,7 +553,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   </div>
   <div class="sl-main">
     <div class="sl-cell"><span>Roll</span><b class="sl-roll" id="slRoll"></b><i class="sl-clip" id="slClip"></i></div>
-    <div class="sl-cell"><span>Scene</span><b id="slScn"></b></div>
+    <div class="sl-cell"><span id="slLblScn">Scene</span><b id="slScn"></b></div>
     <div class="sl-cell"><span>Shot</span><b id="slSht"></b></div>
     <div class="sl-cell"><span>Take</span><b class="sl-tk" id="slTk"></b></div>
   </div>
@@ -566,6 +586,18 @@ button,input,select,textarea{font:inherit;color:inherit}
   <div class="tp-read"><b id="tpVal">T5.6</b><span id="tpNote"></span></div>
   <input class="tp-range" id="tpRange" type="range" min="0" max="24" step="1" aria-label="Value">
   <div class="tp-ticks" id="tpTicks" aria-hidden="true"></div>
+  <div class="tp-zoom" id="tpTint" hidden>
+    <div class="tp-read"><span>Tint</span><b id="tpTintVal">0</b></div>
+    <input class="tp-range" id="tpRange3" type="range" min="-12" max="12" step="1" value="0" aria-label="Tint, minus green, plus magenta">
+    <div class="tp-tl"><span>− Green</span><span>0</span><span>Magenta +</span></div>
+  </div>
+  <div class="tp-zoom" id="tpZoom" hidden>
+    <label class="tp-zt"><input type="checkbox" id="tpZoomOn"> Zoomed during the take</label>
+    <div class="tp-end" id="tpEnd" hidden>
+      <div class="tp-read"><span>Ended at</span><b id="tpEndVal"></b></div>
+      <input class="tp-range" id="tpRange2" type="range" min="0" max="24" step="1" aria-label="Focal length at the end of the take">
+    </div>
+  </div>
   <div class="tp-acts"><button type="button" class="btn quiet" id="tpClear">Clear</button><button type="button" class="btn primary" id="tpDone">Done</button></div>
 </div>
 <div class="toast" id="toast" role="status" hidden><span id="tMsg"></span><button type="button" id="tAct"></button></div>
@@ -1029,8 +1061,10 @@ function pinClips(roll){
 var FIELDS = [
   { k: 'fps',    name: 'Frame rate',    ex: '16 fps', pre: '',  suf: ' fps', mode: 'decimal' },
   { k: 'shutter', name: 'Shutter angle', ex: '180°',   pre: '',  suf: '°',    mode: 'decimal' },
+  { k: 'wb',      name: 'White balance', ex: '5600K +2, digital only', pre: '', suf: '', mode: 'numeric', digitalOnly: true },
   { k: 'make',    name: 'Lens name',     ex: 'CZ Super Speed', pre: '', suf: '', mode: 'text', hint: 'lens name',
-    choices: ['ARRI Signature Prime', 'ARRI Ultra Prime', 'CZ Super Speed', 'DZOFilm'] },
+    choices: ['ARRI Signature Prime', 'ARRI Ultra Prime', 'Cooke Panchro Classic', 'CZ Super Speed', 'DZOFilm',
+      'Angénieux Optimo Style 16-40', 'Angénieux Optimo Style 30-76', 'Zeiss Compact Zoom 70-200'] },
   { k: 'lens',    name: 'Lens',          ex: '24mm',   pre: '',  suf: 'mm',   mode: 'text' },
   { k: 't',       name: 'T-stop',        ex: 'T5.6',   pre: 'T', suf: '',     mode: 'decimal' },
   { k: 'filter',  name: 'Filter',        ex: 'ND.6',   pre: '',  suf: '',     mode: 'text', hint: 'filter',
@@ -1044,16 +1078,44 @@ var FIELDS = [
   { k: 'other',   name: 'Other',         ex: 'free text', pre: '', suf: '',   mode: 'text', hint: 'other' }
 ];
 var NOFILTER = 'None';
+var GEAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>';
+/* zooms: picking one limits the focal-length slider to its range, in 1mm steps.
+   A focal length logged as "35→85" means the lens was zoomed during the take. */
+var ZOOMS = {
+  'Angénieux Optimo Style 16-40': [16, 40],
+  'Angénieux Optimo Style 30-76': [30, 76],
+  'Zeiss Compact Zoom 70-200': [70, 200]
+};
+function zoomCfg(make){
+  var z = ZOOMS[tr(make)];
+  if (!z) return null;
+  var vals = [], marks = [], step = (z[1] - z[0]) / 4;
+  for (var f = z[0]; f <= z[1]; f++) vals.push(String(f));
+  for (var m = 0; m <= 4; m++) marks.push(String(Math.round(z[0] + step * m)));
+  return { name: 'Focal length', def: String(z[0]), fmt: PICK.lens.fmt, vals: vals, marks: marks, zoom: z, key: 'z' + z.join('-') };
+}
+// white balance is stored as "5600K" or "5600K +2": Kelvin, then tint (+ magenta, - green)
+function wbParts(v){
+  var m = /(\d+)\s*K?\s*([+\-\u2212]\s*\d+(\.\d+)?)?/i.exec(String(v || ''));
+  return m ? { k: m[1], t: m[2] ? parseFloat(m[2].replace(/\s|\u2212/g, function(c){ return c === '\u2212' ? '-' : ''; })) : 0 } : { k: '', t: 0 };
+}
+function wbValue(k, t){ return k ? k + 'K' + (t ? ' ' + (t > 0 ? '+' : '') + t : '') : ''; }
+function focalParts(v){ var m = String(v || '').split('\u2192'); return { a: tr(m[0]), b: tr(m[1] || '') }; }
 function isNone(v){ v = tr(v).toLowerCase(); return v === 'none' || v === 'no filter'; }
 var PICK = {
   t: { name: 'T-stop', def: '5.6', fmt: function(v){ return 'T' + v; },
        vals: ['1.3','1.4','1.6','1.8','2','2.2','2.5','2.8','3.2','3.5','4','4.5','5','5.6','6.3','7.1','8','9','10','11','13','14','16','18','20','22'],
        marks: ['1.4','2','2.8','4','5.6','8','11','16','22'] },
+  wb: { name: 'White balance', def: '5600', tint: true, fmt: function(v){ return v + 'K'; },
+       vals: ['2000','2500','2800','3000','3200','3400','3600','3800','4000','4300','4500','4800','5000','5300','5600','6000','6500','7000','7500','8000','9000','10000','11000'],
+       marks: ['2000','3200','4300','5600','8000','11000'] },
   lens: { name: 'Focal length', def: '35', fmt: function(v){ return v + 'mm'; },
-       vals: ['8','9.5','10','10.5','12','14','15','16','18','21','24','25','27','28','29','32','35','40','47','50','55','58','60','65','75','85','90','95','100','125','135','150','180','200','250','280','300'],
+       vals: ['8','9.5','10','10.5','12','14','15','16','18','20','21','24','25','27','28','29','32','35','40','47','50','55','58','60','65','75','85','90','95','100','125','135','150','180','200','250','280','300'],
        marks: ['8','18','25','35','50','85','135','200','300'] }
 };
 function fields(){ return FIELDS.filter(function(f){ return state.fields.indexOf(f.k) >= 0; }); }
+// the settings a given roll shows: white balance is a digital setting, so film rolls leave it out
+function rollFields(roll){ var dig = isDigitalCam((roll || cur()).camera); return fields().filter(function(f){ return dig || !f.digitalOnly; }); }
 function fmtField(f, v){ v = tr(v); return v ? (f.pre + v + f.suf).trim() : ''; }
 var fine = window.matchMedia ? matchMedia('(pointer:fine)').matches : true;
 function phone(){ return window.innerWidth < 768; }
@@ -1062,7 +1124,7 @@ function phone(){ return window.innerWidth < 768; }
 function today(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 function blankRoll(no, from){
   return { id: uid(), roll: no || '001', eor: '', rows: [],
-    production: from ? from.production || '' : '', date: today(), stock: from ? from.stock || '' : '', res: from ? from.res || '' : '', camera: from ? from.camera || '' : '',
+    production: from ? from.production || '' : '', date: today(), stock: from ? from.stock || '' : '', res: from ? from.res || '' : '', numbering: from ? from.numbering || '' : '', camera: from ? from.camera || '' : '',
     director: from ? from.director || '' : '', dop: from ? from.dop || '' : '', ac1: from ? from.ac1 || '' : '', ac2: from ? from.ac2 || '' : '', dit: from ? from.dit || '' : '', mag: '',
     accent: from ? from.accent || '' : '' };   // the roll colour carries forward, then belongs to this roll alone
 }
@@ -1078,7 +1140,7 @@ function load(){
   return { current: r.id, rolls: [r] };
 }
 var state = load();
-var DEFAULT_FIELDS = ['fps', 'shutter', 'make', 'lens', 't', 'filter'];
+var DEFAULT_FIELDS = ['fps', 'shutter', 'wb', 'make', 'lens', 't', 'filter'];
 if (!Array.isArray(state.fields)) state.fields = DEFAULT_FIELDS.slice();
 if (state.accent && !state.accentProd){ state.accentProd = state.accent; state.accentRoll = state.accent; }
 // the roll colour used to be one setting for the whole sheet: pin it onto each roll that has none
@@ -1087,6 +1149,8 @@ if (state.accentRoll && !state.rollAccents){
   state.rolls.forEach(function(r){ if (!r.accent) r.accent = state.accentRoll; });
 }
 if (!state.makeAdded){ state.makeAdded = true; if (state.fields.indexOf('make') < 0) state.fields.push('make'); }
+state.rolls.forEach(function(r){ r.rows.forEach(function(x){ if (x.set && /^\d+$/.test(tr(x.set.wb))) x.set.wb = tr(x.set.wb) + 'K'; }); });
+if (!state.wbAdded){ state.wbAdded = true; if (state.fields.indexOf('wb') < 0) state.fields.push('wb'); }   // on once; untick it in Settings to hide
 // one-time top-up to the full set bar Other, on every screen size
 if (!state.phoneDefaults){
   state.phoneDefaults = true;
@@ -1325,7 +1389,7 @@ function grow(el){
   el.style.height = el.scrollHeight + 'px';
 }
 function pillsHTML(r){
-  return fields().map(function(f){
+  return rollFields().map(function(f){
     var val = (r.set || {})[f.k] || '';
     if (f.choices || f.groups){
       function opt(o){ return '<option' + (o === val ? ' selected' : '') + '>' + esc(o) + '</option>'; }
@@ -1353,11 +1417,11 @@ function rowHTML(r){
   }
   return '<div class="row' + (r.good ? ' good' : '') + '" data-id="' + r.id + '">' +
     '<span class="c-slate">' +
-      one('scn', 'Scene', 'c-scn', ' autocapitalize="characters"') +
+      one('scn', slateMode() ? 'Slate' : 'Scene', 'c-scn', ' autocapitalize="characters"') +
       '<span class="sl" aria-hidden="true">/</span>' +
       one('sht', 'Shot', 'c-sht', ' autocapitalize="characters"') +
       '<span class="sl" aria-hidden="true">/</span>' +
-      one('tk', 'Take', 'c-tk', ' inputmode="numeric"').replace('</label>',
+      one('tk', 'Take', 'c-tk', ' inputmode="numeric"').replace('Take</span>', 'Take<button type="button" class="numgear" data-numcfg aria-label="Take numbering">' + GEAR + '</button></span>').replace('</label>',
         '<button type="button" class="circ" data-circ aria-pressed="' + !!r.good + '" aria-label="Circle this take" title="Circle take"></button></label>') +
     '</span>' +
     (digital()
@@ -1498,7 +1562,17 @@ function renderHead(){
   syncStock();
   sizeRoll();
 }
-function renderAll(){ applyAccent(); renderSelect(); renderHead(); renderRows(); }
+// Slate numbering (one running slate number per set-up, takes restart on each) or Scene / Shot / Take.
+// It's kept per roll, and a new roll starts with the one before it.
+function slateMode(roll){ return (roll || cur()).numbering === 'slate'; }
+function syncNumbering(){
+  var sm = slateMode();
+  $('.sheet').classList.toggle('slatemode', sm);
+  $('#hScn').textContent = sm ? 'Slate' : 'Scene';
+  $('#addShot').textContent = sm ? 'New slate' : 'New shot';
+  $('#addScene').hidden = sm;
+}
+function renderAll(){ applyAccent(); renderSelect(); renderHead(); syncNumbering(); renderRows(); }
 
 /* ---------- adding takes ---------- */
 function addRow(kind){
@@ -1509,6 +1583,7 @@ function addRow(kind){
   if (!prev){ focusKey = 'scn'; }
   else if (kind === 'take'){ r.tk = incr(prev.tk); }
   else if (kind === 'shot'){ r.scn = eff.scn; r.sht = incr(eff.sht); r.set = JSON.parse(JSON.stringify(eff.set)); if (r.set.filter === NOFILTER) delete r.set.filter; focusKey = 'sht'; }
+  else if (kind === 'slate'){ r.scn = incr(eff.scn); r.set = JSON.parse(JSON.stringify(eff.set)); if (r.set.filter === NOFILTER) delete r.set.filter; focusKey = 'scn'; }
   else if (kind === 'scene'){ r.sht = '1'; r.set = JSON.parse(JSON.stringify(eff.set)); if (r.set.filter === NOFILTER) delete r.set.filter; focusKey = 'scn'; }
   rows.push(r);
   if (digital()) pinClips(roll);
@@ -1521,7 +1596,25 @@ function addRow(kind){
   if (fine){ var f = $('[data-k="' + focusKey + '"]', el); if (f) f.focus({ preventScroll: true }); }
 }
 $('#addTake').addEventListener('click', function(){ addRow('take'); });
-$('#addShot').addEventListener('click', function(){ addRow('shot'); });
+$('#addShot').addEventListener('click', function(){ addRow(slateMode() ? 'slate' : 'shot'); });
+// numbering chooser: the gear on the Take heading (desktop) or on the first take's label (phone)
+function openNumbering(){
+  var sm = slateMode();
+  openModal('Take numbering',
+    '<p>Applies to this roll. New rolls start with the same choice.</p><div class="opts">' +
+    '<label class="opt"><input type="radio" name="numb" value=""' + (sm ? '' : ' checked') + '>Scene / Shot / Take<small>12 / A / 3</small></label>' +
+    '<label class="opt"><input type="radio" name="numb" value="slate"' + (sm ? ' checked' : '') + '>Slate / Take<small>142 / 3</small></label>' +
+    '</div>',
+    [{ label: 'Done', cls: 'primary' }]);
+  $('#mBody').onchange = function(e){
+    if (e.target.name !== 'numb') return;
+    cur().numbering = e.target.value; syncNumbering(); renderRows(); save();
+  };
+}
+$('#numCfg').addEventListener('click', openNumbering);
+document.addEventListener('click', function(e){
+  if (e.target.closest && e.target.closest('[data-numcfg]')){ e.preventDefault(); openNumbering(); }
+});
 $('#addScene').addEventListener('click', function(){ addRow('scene'); });
 
 /* ---------- editing ---------- */
@@ -1590,8 +1683,9 @@ rowsEl.addEventListener('click', function(e){
   var o = rowOf(del), roll = o.roll, idx = roll.rows.indexOf(o.row);
   var x = resolve(roll.rows)[idx] || {};
   var bits = [];
-  if (tr(x.scn)) bits.push('Scene ' + tr(x.scn));
-  if (tr(x.sht)) bits.push('shot ' + tr(x.sht));
+  var sm = slateMode(roll);
+  if (tr(x.scn)) bits.push((sm ? 'Slate ' : 'Scene ') + tr(x.scn));
+  if (tr(x.sht) && !sm) bits.push('shot ' + tr(x.sht));
   if (tr(o.row.tk)) bits.push('take ' + tr(o.row.tk));
   var desc = tr(o.row.desc) || tr(x.desc);
   openModal('Delete this take?',
@@ -1707,14 +1801,15 @@ function fmtDate(v){
 function buildPDF(){
   var J = window.jspdf && window.jspdf.jsPDF;
   if (!J) return null;
-  var roll = cur(), res = resolve(roll.rows), fs = fields(), ds = durations(roll, res);
+  var roll = cur(), res = resolve(roll.rows), fs = rollFields(roll), ds = durations(roll, res);
   var doc = new J({ unit: 'mm', format: 'a4', orientation: 'portrait' });
   var M = 15, W = 180, LH = 7, BOTTOM = 297 - 16;
   var dig = isDigitalCam(roll.camera);
   var inkProd = rgb(accentOf('prod').print), inkRoll = rgb(accentOf('roll', roll).print);
   var cw = dig ? [15, 13, 13, 48, 24, 37, 30] : [15, 13, 13, 51, 18, 40, 30], xs = [M];
   for (var c = 1; c < cw.length; c++) xs[c] = xs[c - 1] + cw[c - 1];
-  var labels = ['SCENE', 'SHOT', 'TAKE', 'SETTINGS', dig ? 'TIMECODE' : ['FT', 'COUNTER'], 'DESCRIPTION', 'NOTES'];
+  var sm = slateMode(roll);   // slate numbering: one SLATE heading across the first two columns
+  var labels = [sm ? 'SLATE' : 'SCENE', sm ? '' : 'SHOT', 'TAKE', 'SETTINGS', dig ? 'TIMECODE' : ['FT', 'COUNTER'], 'DESCRIPTION', 'NOTES'];
   var y, headTop, gaps = [], clips = dig ? clipNames(roll) : [];
   var rollName = 'Roll #' + (roll.roll || '');
 
@@ -1756,6 +1851,7 @@ function buildPDF(){
     doc.setFontSize(9.5);
     headTop = y - 9;
     labels.forEach(function(l, i){
+      if (sm && i === 0){ doc.text(l, M + (cw[0] + cw[1]) / 2, y, { align: 'center' }); return; }
       if (Array.isArray(l)){ doc.text(l[0], xs[i] + cw[i] / 2, y - 4, { align: 'center' }); doc.text(l[1], xs[i] + cw[i] / 2, y, { align: 'center' }); }
       else doc.text(l, xs[i] + cw[i] / 2, y, { align: 'center' });
     });
@@ -1767,6 +1863,7 @@ function buildPDF(){
   function columnRules(){
     doc.setDrawColor(40, 44, 48); doc.setLineWidth(0.35);
     for (var i = 1; i <= 6; i++){
+      if (sm && i === 1) continue;   // no Scene|Shot rule when the slate spans both
       if (i > 2 || !gaps.length){ doc.line(xs[i], headTop, xs[i], y); continue; }
       // the Scene|Shot and Shot|Take rules break where a clip name runs across them
       var from = headTop;
@@ -1808,8 +1905,11 @@ function buildPDF(){
     fs.forEach(function(f){
       var own = tr(set[f.k]), inh = x.inh[f.k];
       if (f.k === 'filter' && isNone(own)) return;
-      if (own) tokens.push({ t: fmtField(f, own), grey: false, k: f.k });
-      else if (inh) tokens.push({ t: fmtField(f, inh), grey: true, k: f.k });
+      // the PDF's standard font has no arrow, so a zoom during the take prints as 35>85mm
+      // on a zoom the focal length reads "@ 20mm" so it can't be mistaken for part of the lens's range
+      var at = f.k === 'lens' && ZOOMS[tr(x.set.make)] ? '@ ' : '';
+      if (own) tokens.push({ t: at + fmtField(f, own).replace(/\u2192/g, '>'), grey: false, k: f.k });
+      else if (inh) tokens.push({ t: at + fmtField(f, inh).replace(/\u2192/g, '>'), grey: true, k: f.k });
     });
     tokens.forEach(function(t, n){ if (t.k === 'make' && tokens[n + 1] && tokens[n + 1].k === 'lens') t.glue = true; });
     var setLines = wrapTokens(tokens, cw[3] - 4);
@@ -1827,7 +1927,10 @@ function buildPDF(){
 
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
-    [['scn', 0], ['sht', 1], ['tk', 2]].forEach(function(p){
+    if (sm){
+      if (tr(r.scn)) doc.text(tr(r.scn), M + (cw[0] + cw[1]) / 2, base(0), { align: 'center' });
+      if (tr(r.tk)) doc.text(tr(r.tk), xs[2] + cw[2] / 2, base(0), { align: 'center' });
+    } else [['scn', 0], ['sht', 1], ['tk', 2]].forEach(function(p){
       if (tr(r[p[0]])) doc.text(tr(r[p[0]]), xs[p[1]] + cw[p[1]] / 2, base(0), { align: 'center' });
     });
     if (r.good){
@@ -1930,14 +2033,18 @@ function fallbackSave(blob, name){
 function toCSV(){
   var roll = cur(), res = resolve(roll.rows), ds = durations(roll, res);
   function q(s){ return '"' + String(s == null ? '' : s).replace(/"/g, '""').replace(/\n/g, ' ') + '"'; }
-  var fs = fields(), dig = isDigitalCam(roll.camera), clips = dig ? clipNames(roll) : [];
-  var lines = [['Production','Director','DOP','1st AC','2nd AC / Loader'].concat(dig ? ['DIT'] : [], ['Date','Camera'], dig ? ['Codec','Resolution','Media #'] : ['Film stock','Magazine #'], ['Roll','Scene','Shot','Take','Circled'],dig ? ['Clip'] : [], fs.map(function(f){ return f.name; }), dig ? ['TC start','TC end'] : ['FT Counter'], ['Description','Duration (s)','Notes']).map(q).join(',')];
+  var sm = slateMode(roll), fs = rollFields(roll), dig = isDigitalCam(roll.camera), clips = dig ? clipNames(roll) : [];
+  var lines = [['Production','Director','DOP','1st AC','2nd AC / Loader'].concat(dig ? ['DIT'] : [], ['Date','Camera'], dig ? ['Codec','Resolution','Media #'] : ['Film stock','Magazine #'], sm ? ['Roll','Slate','Take','Circled'] : ['Roll','Scene','Shot','Take','Circled'],dig ? ['Clip'] : [], [].concat.apply([], fs.map(function(f){ return f.k === 'lens' ? ['Focal length', 'Focal length end'] : f.k === 'wb' ? ['White balance', 'Tint'] : [f.name]; })), dig ? ['TC start','TC end'] : ['FT Counter'], ['Description','Duration (s)','Notes']).map(q).join(',')];
   roll.rows.forEach(function(r, i){
     var x = res[i];
-    lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2].concat(dig ? [roll.dit || ''] : [], [roll.date, roll.camera, roll.stock], dig ? [roll.res || ''] : [], [roll.mag, roll.roll, x.scn, x.sht, r.tk, r.good ? 'Yes' : ''], dig ? [clips[i]] : [], fs.map(function(f){ return fmtField(f, x.set[f.k]); }), (dig ? [r.tcin || '', r.tcout || ''] : [r.ft || '']), [x.desc, ds[i] && ds[i].secs != null ? ds[i].secs : '', r.comment]).map(q).join(','));
+    lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2].concat(dig ? [roll.dit || ''] : [], [roll.date, roll.camera, roll.stock], dig ? [roll.res || ''] : [], [roll.mag, roll.roll], sm ? [x.scn] : [x.scn, x.sht], [r.tk, r.good ? 'Yes' : ''], dig ? [clips[i]] : [], [].concat.apply([], fs.map(function(f){
+      if (f.k === 'wb'){ var w = wbParts(x.set.wb); return [w.k ? w.k + 'K' : '', w.t ? (w.t > 0 ? '+' : '') + w.t : '']; }
+      if (f.k !== 'lens') return [fmtField(f, x.set[f.k])];
+      var p = focalParts(x.set.lens); return [fmtField(f, p.a), fmtField(f, p.b)];
+    })), (dig ? [r.tcin || '', r.tcout || ''] : [r.ft || '']), [x.desc, ds[i] && ds[i].secs != null ? ds[i].secs : '', r.comment]).map(q).join(','));
   });
-  var blanks = fs.map(function(){ return ''; });
-  lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2].concat(dig ? [roll.dit || ''] : [], [roll.date, roll.camera, roll.stock], dig ? [roll.res || ''] : [], [roll.mag, roll.roll, '', '', '', ''],
+  var blanks = [].concat.apply([], fs.map(function(f){ return f.k === 'lens' || f.k === 'wb' ? ['', ''] : ['']; }));
+  lines.push([roll.production, roll.director, roll.dop, roll.ac1, roll.ac2].concat(dig ? [roll.dit || ''] : [], [roll.date, roll.camera, roll.stock], dig ? [roll.res || ''] : [], [roll.mag, roll.roll], sm ? ['', '', ''] : ['', '', '', ''],
     dig ? [''] : [], blanks, dig ? ['', ''] : [''], ['', '', 'End of roll #' + roll.roll + (!dig && roll.eor ? ' ' + roll.eor + ' ft' : '')]).map(q).join(','));
   return lines.join('\n');
 }
@@ -1952,7 +2059,7 @@ $('#btnCopy').addEventListener('click', function(){
 });
 
 /* ---------- slider pickers: T-stop and focal length ---------- */
-var tp = $('#tpick'), tpRange = $('#tpRange'), tpInp = null, tpKind = null;
+var tp = $('#tpick'), tpRange = $('#tpRange'), tpRange2 = $('#tpRange2'), tpInp = null, tpKind = null, tpCfg = null;
 function buildTicks(cfg){
   var html = '', last = cfg.vals.length - 1;
   cfg.vals.forEach(function(v, i){
@@ -1963,15 +2070,22 @@ function buildTicks(cfg){
   $('#tpTicks').innerHTML = html;
 }
 function nearestIdx(vals, v, def){
-  var n = parseFloat(String(v || '').replace(/[^\d.]/g, ''));
+  var m = /\d+(\.\d+)?/.exec(String(v || '')), n = m ? parseFloat(m[0]) : NaN;   // first number only: "35→85" reads as 35
   if (isNaN(n)) return vals.indexOf(def);
   var best = 0;
   vals.forEach(function(t, i){ if (Math.abs(parseFloat(t) - n) < Math.abs(parseFloat(vals[best]) - n)) best = i; });
   return best;
 }
 function tpShow(){
-  var cfg = PICK[tpKind], v = tpInp.value, inh = !v && tpInp.placeholder && /\d/.test(tpInp.placeholder) ? tpInp.placeholder : '';
-  $('#tpVal').textContent = cfg.fmt(v || inh || cfg.vals[+tpRange.value]);
+  var cfg = tpCfg, v = tpInp.value, inh = !v && tpInp.placeholder && /\d/.test(tpInp.placeholder) ? tpInp.placeholder : '';
+  var p = focalParts(v || inh || cfg.vals[+tpRange.value]);
+  if (cfg.tint){
+    var w = wbParts(v || inh || cfg.vals[+tpRange.value]);
+    p.a = w.k;
+    $('#tpTintVal').textContent = w.t ? (w.t > 0 ? '+' + w.t + ' magenta' : '\u2212' + (-w.t) + ' green') : '0';
+  }
+  $('#tpVal').textContent = cfg.fmt(p.a);
+  $('#tpEndVal').textContent = p.b ? cfg.fmt(p.b) : '';
   $('#tpNote').textContent = v ? '' : (inh ? 'Carried from above' : 'Not set');
 }
 function tpPlace(){
@@ -1984,9 +2098,23 @@ function tpPlace(){
   if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 6);
   tp.style.left = left + 'px'; tp.style.top = top + 'px';
 }
+// the lens a take is on: its own pick, or the one carried down from above
+function makeFor(inp){
+  var o = rowOf(inp), i = o.roll.rows.indexOf(o.row), x = resolve(o.roll.rows)[i] || {};
+  return tr((o.row.set || {}).make) || tr(x.set && x.set.make);
+}
 function openT(inp){
-  var kind = inp.dataset.s, cfg = PICK[kind];
-  if (tpKind !== kind){ buildTicks(cfg); tpRange.max = cfg.vals.length - 1; tpKind = kind; }
+  var kind = inp.dataset.s, cfg = kind === 'lens' ? (zoomCfg(makeFor(inp)) || PICK.lens) : PICK[kind];
+  var key = cfg.key || kind;
+  if (tpKind !== key){ buildTicks(cfg); tpRange.max = tpRange2.max = cfg.vals.length - 1; tpKind = key; }
+  tpCfg = cfg;
+  var parts = focalParts(inp.value || inp.placeholder);
+  $('#tpZoom').hidden = !cfg.zoom;
+  $('#tpTint').hidden = !cfg.tint;
+  if (cfg.tint) $('#tpRange3').value = wbParts(inp.value || inp.placeholder).t;
+  $('#tpZoomOn').checked = !!(cfg.zoom && parts.b);
+  $('#tpEnd').hidden = !(cfg.zoom && parts.b);
+  if (cfg.zoom) tpRange2.value = nearestIdx(cfg.vals, parts.b || parts.a, cfg.def);
   tpRange.setAttribute('aria-label', cfg.name);
   tp.setAttribute('aria-label', 'Choose ' + cfg.name.toLowerCase());
   tpInp = inp;
@@ -2001,16 +2129,28 @@ function closeT(refocus){
   var inp = tpInp; tpInp = null;
   if (refocus && inp && fine) inp.focus({ preventScroll: true });
 }
+function tpValue(){
+  var a = tpCfg.vals[+tpRange.value];
+  if (tpCfg.tint) return wbValue(a, +$('#tpRange3').value);
+  return tpCfg.zoom && $('#tpZoomOn').checked ? a + '\u2192' + tpCfg.vals[+tpRange2.value] : a;
+}
 function setT(v){
   if (!tpInp) return;
   tpInp.value = v;
   tpInp.dispatchEvent(new Event('input', { bubbles: true }));
   tpShow();
 }
-tpRange.addEventListener('input', function(){ setT(PICK[tpKind].vals[+tpRange.value]); });
+tpRange.addEventListener('input', function(){ setT(tpValue()); });
+tpRange2.addEventListener('input', function(){ setT(tpValue()); });
+$('#tpRange3').addEventListener('input', function(){ setT(tpValue()); });
+$('#tpZoomOn').addEventListener('change', function(){
+  $('#tpEnd').hidden = !this.checked;
+  if (this.checked) tpRange2.value = tpRange.value;   // start the end where the take began
+  setT(tpValue());
+});
 $('#tpClear').addEventListener('click', function(){ setT(''); closeT(true); });
 $('#tpDone').addEventListener('click', function(){
-  if (tpInp && !tpInp.value) setT(PICK[tpKind].vals[+tpRange.value]);
+  if (tpInp && !tpInp.value) setT(tpValue());
   closeT(true);
 });
 rowsEl.addEventListener('click', function(e){
@@ -2210,6 +2350,9 @@ function slRender(){
   $('#slProd').textContent = tr(roll.production) || 'Untitled';
   $('#slDate').textContent = fmtDateShow(roll.date);
   $('#slRoll').textContent = tr(roll.roll);
+  var smode = slateMode(roll);
+  slEl.classList.toggle('sm', smode);
+  $('#slLblScn').textContent = smode ? 'Slate' : 'Scene';
   $('#slScn').textContent = r ? tr(x.scn) : '';
   $('#slSht').textContent = r ? tr(x.sht) : '';
   $('#slTk').textContent = r ? tr(r.tk) : '';
